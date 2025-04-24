@@ -1,0 +1,18 @@
+[project]
+name = "uba-mia"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Your Name", email = "you@example.com" }]
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+dependencies = ["numpy (==1.26.4)", "pandas (==2.2.2)", "pmdarima (>=2.0.4,<3.0.0)", "matplotlib (>=3.10.1,<4.0.0)", "tensorflow (>=2.19.0,<3.0.0)", "keras (>=3.9.2,<4.0.0)", "python-dotenv (>=1.1.0,<2.0.0)", "python-binance (>=1.0.28,<2.0.0)", "wand (>=0.6.13,<0.7.0)", "mplfinance (>=0.12.10b0,<0.13.0)", "tqdm (>=4.67.1,<5.0.0)", "prophet (>=1.1.6,<2.0.0)", "xgboost (>=3.0.0,<4.0.0)", "scikit-learn (>=1.6.1,<2.0.0)", "ipywidgets (>=8.1.6,<9.0.0)"]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
