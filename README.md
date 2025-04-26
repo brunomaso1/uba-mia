@@ -1,8 +1,26 @@
-# uba-mia
-Repositorio de la Maestría en Inteligencia Artificial (MIA) - Universidad de Buenos Aires (UBA)
+# UBA-NLP2
+Repositorio de la Maestría en Inteligencia Artificial (MIA) - Universidad de Buenos Aires (UBA) - NLP 2
 
 ## Estructura
-Cada rama es una materia.
+Puedes encontrar la siguiente estructura de carpetas en el repositorio:
+
+```bash
+mia-nlp2
+├── Ejemplos/
+├── Practico 1/
+├── Practico 2/
+├── Practico 3/
+└── resources/
+```
+
+- **[Ejemplos/](./mia-nlp2/Ejemplos/)**: contiene ejemplos de usos y pruebas de conceptos.
+- **[Practico 1/](./mia-nlp2/Practico%201/)**: contiene el primer práctico de la materia.
+- **[Practico 2/](./mia-nlp2/Practico%202/)**: contiene el segundo práctico de la materia.
+- **[Practico 3/](./mia-nlp2/Practico%203/)**: contiene el tercer práctico de la materia.
+- **[resources/](./mia-nlp2/resources/)**: contiene recursos adicionales
+
+> [!Important]  
+> Cada práctico tiene su propio notebook llamado `research.ipynb` donde se encuentra el análisis realizado. En él se incluye como ejecutar las aplicaciones de los prácticos 1 y 2. El práctico 3 no tiene aplicación, dado que es un práctico de investigación.
 
 ## Manejo de dependencias
 
