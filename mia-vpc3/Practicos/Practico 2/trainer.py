@@ -155,7 +155,7 @@ class Trainer:
             losses.append(loss.item())
             # loss.backward()
             # optimizer.step()
-            # optimizer.zero_grad()
+            # optimizer.zero_grad() # También se pude usar optimizer.zero_grad(set_to_none=True)
             for param in model.parameters():
                 param.grad = None
             bar.set_description(f"loss {loss:.5f}")
