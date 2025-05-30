@@ -1,0 +1,26 @@
+[project]
+name = "uba-mia-ast2"
+version = "0.1.0"
+description = ""
+authors = [{ name = "brunomaso1", email = "brunomaso1@hotmail.com" }]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipywidgets (>=8.1.7,<9.0.0)",
+    "ipykernel (>=6.29.5,<7.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "numpy (>=1.26.0,<3.0.0)",
+    "matplotlib (>=3.10.3,<4.0.0)",
+    "scikit-learn (>=1.6.1,<2.0.0)",
+    "statsmodels (>=0.14.4,<0.15.0)",
+    "tf-nightly (>=2.20.0.dev20250530,<3.0.0)",
+    "keras (>=3.10.0,<4.0.0)",
+    "pydot (>=4.0.0,<5.0.0)",
+]
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
