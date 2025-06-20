@@ -1,0 +1,11 @@
+site_name: EuroSAT Vision Transformer
+site_description: Documentación del proyecto "Vision Transformer en el conjunto EuroSAT" para clasificación de imágenes en el dataset EuroSAT.
+site_author: Your name (or your organization/company/team)
+nav:
+  - Home: index.md
+  - About: about.md
+  - Tests: tests.md
+  - Prefect: prefect.md
+  - MLFlow: mlflow.md
+  - Notebooks: notebooks.md
+theme: readthedocs

@@ -1,0 +1,2 @@
+eval_loss,eval_model_preparation_time,eval_accuracy,eval_f1,eval_precision,eval_recall,eval_runtime,eval_samples_per_second,eval_steps_per_second
+0.06534088402986526,0.0073,0.9796296296296296,0.9796144597544632,0.9799375305535378,0.9796296296296296,56.1665,48.071,0.766
