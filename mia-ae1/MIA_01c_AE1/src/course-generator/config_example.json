@@ -1,0 +1,98 @@
+{
+  "subjects": [
+    "Intro a Seguros",
+    "Matemática Actuarial",
+    "Riesgos",
+    "Legislación",
+    "Seguros de Vida",
+    "Seguros Generales",
+    "Gestión Comercial",
+    "Reaseguros",
+    "Estadística Aplicada",
+    "Finanzas Corporativas",
+    "Derecho de Seguros",
+    "Auditoría y Control"
+  ],
+  "professors": [
+    "Prof. A",
+    "Prof. B",
+    "Prof. C",
+    "Prof. D",
+    "Prof. E",
+    "Prof. F",
+    "Prof. G",
+    "Prof. H",
+    "Prof. I",
+    "Prof. J",
+    "Prof. K",
+    "Prof. L"
+  ],
+  "cohorts": [
+    "Cohorte1",
+    "Cohorte2"
+  ],
+  "week_days": [
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes"
+  ],
+  "professor_by_subject": [
+    ["Intro a Seguros", "Prof. A"],
+    ["Intro a Seguros", "Prof. B"],
+    ["Matemática Actuarial", "Prof. C"],
+    ["Matemática Actuarial", "Prof. D"],
+    ["Riesgos", "Prof. A"],
+    ["Riesgos", "Prof. B"],
+    ["Legislación", "Prof. E"],
+    ["Seguros de Vida", "Prof. F"],
+    ["Seguros Generales", "Prof. G"],
+    ["Gestión Comercial", "Prof. H"],
+    ["Reaseguros", "Prof. D"],
+    ["Estadística Aplicada", "Prof. I"],
+    ["Estadística Aplicada", "Prof. C"],
+    ["Finanzas Corporativas", "Prof. J"],
+    ["Derecho de Seguros", "Prof. K"],
+    ["Derecho de Seguros", "Prof. E"],
+    ["Auditoría y Control", "Prof. L"]
+  ],
+  "prerequisites": [
+    ["Riesgos", "Matemática Actuarial"],
+    ["Legislación", "Intro a Seguros"],
+    ["Seguros de Vida", "Intro a Seguros"],
+    ["Seguros Generales", "Intro a Seguros"],
+    ["Gestión Comercial", "Legislación"],
+    ["Reaseguros", "Seguros de Vida"],
+    ["Estadística Aplicada", "Matemática Actuarial"],
+    ["Finanzas Corporativas", "Legislación"]
+  ],
+  "shifts": ["Mañana", "Tarde"],
+  "blocked_slots": [
+    ["Viernes", "Tarde"],
+    ["Lunes", "Mañana"]
+  ],
+  "num_years": 2,
+  "semesters_per_year": 2,
+  "start_year": 2026,
+  "max_classes_per_week": 2,
+  "max_subjects_per_day_professor": 2,
+  "max_subjects_per_day_cohort": 2,
+  "pso_options": {
+    "c1": 1.5,
+    "c2": 1.5,
+    "w": 0.7
+  },
+  "n_particles": 480,
+  "max_iters": 1000,
+  "penalty_weights": {
+    "semester_distribution": 20000,
+    "prerequisites": 20000,
+    "blocked_slots": 500,
+    "professor_overload": 100,
+    "cohort_overload": 200,
+    "slot_conflicts": 500,
+    "day_balance": 50,
+    "shift_usage": 100
+  }
+}

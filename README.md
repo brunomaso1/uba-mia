@@ -2,4 +2,5 @@
 Repositorio de la Maestría en Inteligencia Artificial (MIA) - Universidad de Buenos Aires (UBA)
 
 ## Estructura
-Cada rama es una materia.
+
+Algoritmos evolutivos I.
