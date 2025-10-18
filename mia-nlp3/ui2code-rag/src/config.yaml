@@ -1,0 +1,77 @@
+# Configuration for UI-to-Code Multi-Agent System
+
+# Data directories
+data:
+  corpus_dir: "corpus"
+
+# RAG specific paths (existing source code)
+rag:
+  ingestion_dir: "src/rag/ingestion"
+  retrievers_dir: "src/rag/retrievers"
+  evaluators_dir: "src/rag/evaluators"
+  core_dir: "src/rag/core"
+  ce_model: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+# Application paths
+app:
+  main_file: "src/app/main.py"
+  streamlit_port: 8501
+
+# Source code structure
+src:
+  agents_dir: "src/agents"
+  runtime_dir: "src/runtime"
+
+# Development directories (only existing ones)
+development:
+  docs_dir: "docs"
+
+# UI-to-Code specific paths
+ui_to_code:
+  ui_examples_dir: "ui_examples"
+  temp_images_dir: "data/temp_images"
+  generated_code_dir: "data/generated_code"
+  websight_data_dir: "data/websight"
+  websight_data_file_name: "websight"
+
+# Configuration files
+files:
+  requirements_file: "requirements.txt"
+  requirements_dev_file: "requirements-dev.txt"
+  setup_file: "setup.py"
+  pyproject_file: "pyproject.toml"
+  config_file: "src/config.yaml"
+  env_file: ".env"
+  env_example_file: ".env.example"
+  makefile: "Makefile"
+  readme_file: "README.md"
+  gitignore_file: ".gitignore"
+  check_deps_file: "check_deps.py"
+  quick_start_file: "quick_start.py"
+  run_streamlit_file: "run_streamlit.py"
+
+# Agent service URLs
+agents_endpoints:
+  visual_agent_url: "http://visual-agent:10000"
+  code_agent_url: "http://code-agent:10001"
+
+pinecone:
+  index: "rag-index"
+  model_name: "text-embedding-ada-002"
+  cloud: "aws"
+  region: "us-east-1"
+  namespace: "default"
+  rag_namespace: "html-css-examples"
+  metric: "cosine"
+
+sentence_transformers:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+
+server_timeout_keep_alive: 600  # seconds
+server_connect_timeout: 30  # seconds
+
+websight_dataset:
+  max_examples: 1000
+  download_steps: 100
+  download_offset: 0
+  download_length: 1000

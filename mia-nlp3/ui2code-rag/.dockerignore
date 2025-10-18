@@ -1,0 +1,21 @@
+# Ignorar entornos y caches
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache
+*.mypy_cache
+*.coverage
+*.egg-info
+
+# Ignorar VSCode y logs
+.vscode
+logs
+tests
+data
+corpus
+
+# Ignorar agentes que no van en la app principal
+src/agents/code_a2a_agent
+src/agents/visual_a2a_agent

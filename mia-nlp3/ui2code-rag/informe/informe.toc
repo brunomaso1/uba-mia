@@ -1,0 +1,110 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{\numberline {1}Resumen}{4}{section.1}%
+\contentsline {section}{\numberline {2}Presentación del problema}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Contexto y motivación}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Desafíos identificados}{4}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Objetivos}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Objetivo general}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Objetivos específicos}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Alcance}{5}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Técnicas y tecnologías utilizadas}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Modelos de Inteligencia Artificial}{6}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Análisis visual}{6}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Generación de código}{6}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}Sistema RAG híbrido}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Infraestructura y orquestación}{6}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Protocolo A2A (Agent-to-Agent)}{6}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Validación y guardrails}{7}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Aplicación web y UI}{7}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.4}Contenerización}{7}{subsubsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.4}Datos y corpus}{7}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Dataset WebSight}{7}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Dataset de evaluación}{8}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Logging y monitoreo}{8}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Arquitectura del sistema}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Visión general}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Pipeline lógico (alto nivel)}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Componentes principales}{9}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Visual agent (puerto 10000)}{9}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}RAG agent (módulo Python)}{9}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Code agent (puerto 10001)}{10}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Orchestrator agent}{10}{subsubsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.4}Diagrama de flujo completo}{10}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Pipeline RAG detallado}{12}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Fase 1: Ingesta de documentos}{14}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Fase 2: Procesamiento}{14}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Fase 3: Búsqueda híbrida (método \texttt {invoke()})}{14}{subsubsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.6}Protocolos de comunicación}{14}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Estructura de directorios}{14}{subsection.5.7}%
+\contentsline {section}{\numberline {6}Flujo funcional - Interfaz de usuario}{15}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Página: Home}{15}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Página: UI to Code (Principal)}{16}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Página: Query Interface}{16}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Página: Evaluaciones}{17}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Página: System Status}{18}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Página: Corpus Information}{18}{subsection.6.6}%
+\contentsline {section}{\numberline {7}Gobernanza de calidad y anti-alucinación}{19}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Estrategias implementadas}{19}{subsection.7.1}%
+\contentsline {subsubsection}{\numberline {7.1.1}RAG como contexto obligatorio}{19}{subsubsection.7.1.1}%
+\contentsline {subsubsection}{\numberline {7.1.2}Guardrails de validación}{19}{subsubsection.7.1.2}%
+\contentsline {subsubsection}{\numberline {7.1.3}Validación anti-hallucination en Code Agent}{19}{subsubsection.7.1.3}%
+\contentsline {subsubsection}{\numberline {7.1.4}Prompts optimizados con reglas críticas}{19}{subsubsection.7.1.4}%
+\contentsline {subsubsection}{\numberline {7.1.5}Fallback controlado}{20}{subsubsection.7.1.5}%
+\contentsline {subsubsection}{\numberline {7.1.6}Umbrales de confianza en recuperación}{20}{subsubsection.7.1.6}%
+\contentsline {subsection}{\numberline {7.2}Hallazgos clave}{20}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Implementación y tooling}{21}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Tecnologías core}{21}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}OpenRouter integration}{21}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Pinecone vector database}{21}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Streamlit como UI acelerada}{22}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Uvicorn + Starlette + A2A}{22}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Configuración dinámica}{23}{subsection.8.6}%
+\contentsline {subsection}{\numberline {8.7}Scripts de evaluación}{23}{subsection.8.7}%
+\contentsline {section}{\numberline {9}Organización del proyecto y división del trabajo}{24}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Distribución de responsabilidades}{24}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Metodología de trabajo}{24}{subsection.9.2}%
+\contentsline {section}{\numberline {10}Resultados y estado actual}{24}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Casos positivos}{24}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Limitaciones observadas}{25}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Resultados de evaluación del sistema RAG}{25}{subsection.10.3}%
+\contentsline {subsubsection}{\numberline {10.3.1}Significado de las métricas}{25}{subsubsection.10.3.1}%
+\contentsline {subsubsection}{\numberline {10.3.2}Interpretación de resultados}{26}{subsubsection.10.3.2}%
+\contentsline {subsubsection}{\numberline {10.3.3}Resumen de evaluación}{26}{subsubsection.10.3.3}%
+\contentsline {section}{\numberline {11}Lecciones aprendidas}{26}{section.11}%
+\contentsline {section}{\numberline {12}Roadmap propuesto}{27}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Corto plazo (1-3 meses)}{27}{subsection.12.1}%
+\contentsline {subsubsection}{\numberline {12.1.1}Mitigación de alucinación y UX}{27}{subsubsection.12.1.1}%
+\contentsline {subsubsection}{\numberline {12.1.2}RAG y corpus}{27}{subsubsection.12.1.2}%
+\contentsline {subsection}{\numberline {12.2}Mediano plazo (3-6 meses)}{27}{subsection.12.2}%
+\contentsline {subsubsection}{\numberline {12.2.1}Agentes y orquestación}{27}{subsubsection.12.2.1}%
+\contentsline {subsubsection}{\numberline {12.2.2}Evaluación y calidad}{28}{subsubsection.12.2.2}%
+\contentsline {subsubsection}{\numberline {12.2.3}Costos y observabilidad}{28}{subsubsection.12.2.3}%
+\contentsline {subsection}{\numberline {12.3}Largo plazo (6+ meses)}{28}{subsection.12.3}%
+\contentsline {section}{\numberline {13}Desafíos afrontados durante el trabajo}{28}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Elección de modelos}{28}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Ejecución en pipeline de procesos}{29}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Gestión de configuraciones}{29}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Sincronización de versiones de librerías}{29}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Performance de evaluaciones}{29}{subsection.13.5}%
+\contentsline {section}{\numberline {14}Conclusiones}{30}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Logros principales}{30}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Desafíos persistentes}{30}{subsection.14.2}%
+\contentsline {subsection}{\numberline {14.3}Valor del proyecto}{30}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Próximos pasos inmediatos}{31}{subsection.14.4}%
+\contentsline {section}{\numberline {15}Anexo - Setup y operación}{31}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Requisitos previos}{31}{subsection.15.1}%
+\contentsline {subsubsection}{\numberline {15.1.1}Producción (recomendado)}{31}{subsubsection.15.1.1}%
+\contentsline {subsubsection}{\numberline {15.1.2}Desarrollo}{31}{subsubsection.15.1.2}%
+\contentsline {subsection}{\numberline {15.2}Instalación y ejecución - Producción}{31}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Instalación y ejecución - Desarrollo}{32}{subsection.15.3}%
+\contentsline {subsection}{\numberline {15.4}Comandos make disponibles}{33}{subsection.15.4}%
+\contentsline {subsection}{\numberline {15.5}Guardrails - Descripción técnica}{33}{subsection.15.5}%
+\contentsline {subsubsection}{\numberline {15.5.1}Guardrails utilizados en el proyecto}{34}{subsubsection.15.5.1}%
+\contentsline {subsection}{\numberline {15.6}Sistema de logging}{34}{subsection.15.6}%
+\contentsline {subsection}{\numberline {15.7}Dataset WebSight - Detalles técnicos}{35}{subsection.15.7}%
+\contentsline {subsection}{\numberline {15.8}Troubleshooting}{36}{subsection.15.8}%
+\contentsline {subsubsection}{\numberline {15.8.1}Si no ves 900 documentos en el corpus}{36}{subsubsection.15.8.1}%
+\contentsline {subsubsection}{\numberline {15.8.2}Si los agentes no inician}{36}{subsubsection.15.8.2}%
+\contentsline {subsubsection}{\numberline {15.8.3}Si hay alucinaciones en código generado}{36}{subsubsection.15.8.3}%
+\contentsline {subsubsection}{\numberline {15.8.4}Si Pinecone no funciona}{36}{subsubsection.15.8.4}%
+\contentsline {section}{\numberline {16}Referencias}{36}{section.16}%

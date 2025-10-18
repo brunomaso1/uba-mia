@@ -1,0 +1,36 @@
+# Development Dependencies for UI-to-Code System
+# Install with: pip install -r requirements-dev.txt
+
+# Include all production dependencies
+-r requirements.txt
+
+# Enhanced development tools
+jupyter>=1.0.0                  # Notebooks for experimentation
+ipython>=8.0.0                  # Enhanced REPL
+nbconvert>=7.0.0                # Notebook conversion
+
+# Advanced testing
+pytest-xdist>=3.0.0             # Parallel testing
+pytest-mock>=3.10.0             # Mocking utilities
+pytest-benchmark>=4.0.0         # Performance testing
+coverage>=7.0.0                  # Code coverage
+
+# Code quality
+mypy>=1.0.0                      # Type checking
+pre-commit>=3.0.0                # Git hooks
+bandit>=1.7.0                    # Security linting
+
+# Documentation
+sphinx>=6.0.0                   # Documentation generation
+sphinx-rtd-theme>=1.2.0         # ReadTheDocs theme
+
+# Performance monitoring
+memory-profiler>=0.60.0         # Memory usage profiling
+line-profiler>=4.0.0            # Line-by-line profiling
+
+# Additional utilities for development
+tqdm>=4.65.0                     # Progress bars
+rich>=13.0.0                     # Rich console output
+click>=8.0.0                     # CLI building
+
+guardrails-ai>=0.6.6

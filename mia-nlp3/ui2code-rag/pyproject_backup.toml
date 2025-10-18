@@ -1,0 +1,141 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+# [build-system]
+# requires = ["poetry-core>=2.0.0,<3.0.0"]
+# build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "ui-to-code-system"
+version = "1.0.0"
+description = "Multi-Agent UI-to-Code System: Convert UI designs to HTML/Tailwind CSS using Visual AI and RAG technology"
+readme = "README.md"
+authors = [{ name = "UI-to-Code Development Team", email = "dev@uitocode.com" }]
+license = { text = "MIT" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+keywords = [
+    "ui-to-code",
+    "html",
+    "css",
+    "tailwind",
+    "visual-ai",
+    "computer-vision",
+    "rag",
+    "multi-agent",
+    "streamlit",
+    "openrouter",
+    "code-generation",
+]
+requires-python = ">3.10,<3.13" # Stremlit no acepta 3.9.7
+dependencies = [
+    "numpy (>=1.24.0)",
+    "pandas (>=2.0.0)",
+    "python-dotenv (>=1.0.0)",
+    "pyyaml (>=6.0.0)",
+    "pyprojroot (>=0.3.0)",
+    "streamlit (>=1.28.0)",
+    "openai (>=1.0.0)",
+    "rank-bm25 (>=0.2.2)",
+    "pinecone (>=3.0.0)",
+    "pillow (>=10.1.0)",
+    "beautifulsoup4 (>=4.12.0)",
+    "datasets (>=2.14.0)",
+    "requests (>=2.31.0)",
+    "pdfplumber (>=0.11.0)",
+    "loguru (>=0.7.3,<0.8.0)",
+    "a2a-sdk (>=0.3.8,<0.4.0)",
+    "nest-asyncio (>=1.6.0,<2.0.0)",
+    "sentence-transformers (>=5.1.1,<6.0.0)",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+    "jupyter>=1.0.0",
+]
+performance = [
+    "torch>=2.0.0",         # GPU acceleration
+    "transformers>=4.30.0", # Local models
+]
+docs = ["sphinx>=4.0.0", "sphinx-rtd-theme>=1.0.0", "myst-parser>=0.18.0"]
+
+[project.urls]
+Homepage = "https://github.com/your-org/rag-project-template"
+Documentation = "https://rag-project-template.readthedocs.io/"
+Repository = "https://github.com/your-org/rag-project-template"
+"Bug Reports" = "https://github.com/your-org/rag-project-template/issues"
+
+[project.scripts]
+ui-to-code = "run_streamlit:main"
+quick-start = "quick_start:main"
+
+[tool.setuptools.packages.find]
+where = ["src", "app"]
+include = ["*"]
+
+[tool.setuptools.package-data]
+"src" = ["config.yaml"]
+"app" = ["models/openai-model/config.json"]
+"*" = ["*.yaml", "*.yml", "*.json", "*.md"]
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+    | \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "slow: Tests that take a long time to run",
+]

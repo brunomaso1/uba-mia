@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagrama de Flujo - Arquitectura RAG Pipeline</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 180, 219, 0.4);
+        }
+
+        .workflow-diagram {
+            position: relative;
+            padding: 20px;
+            background: #fefefe;
+            border-radius: 10px;
+        }
+
+        .box {
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+
+        .box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .core-rag {
+            background: linear-gradient(135deg, #b39ddb 0%, #ce93d8 100%);
+            border: 3px solid #9575cd;
+            max-width: 900px;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .component {
+            background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+            border: 3px solid #42a5f5;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            min-height: 120px;
+        }
+
+        .ingestion {
+            background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+            border: 3px solid #66bb6a;
+        }
+
+        .search {
+            background: linear-gradient(135deg, #ffcc80 0%, #ffb74d 100%);
+            border: 3px solid #ffa726;
+        }
+
+        .evaluators {
+            background: linear-gradient(135deg, #ef9a9a 0%, #e57373 100%);
+            border: 3px solid #ef5350;
+        }
+
+        .websight-loader {
+            background: linear-gradient(135deg, #c5e1a5 0%, #aed581 100%);
+            border: 3px solid #9ccc65;
+            max-width: 800px;
+        }
+
+        .functions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .function-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            border: 3px solid #ffee58;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .download-function {
+            background: linear-gradient(135deg, #b2dfdb 0%, #80cbc4 100%);
+            border: 3px solid #4db6ac;
+        }
+
+        .load-function {
+            background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 100%);
+            border: 3px solid #ec407a;
+        }
+
+        .rag-pipeline {
+            background: linear-gradient(135deg, #ce93d8 0%, #ba68c8 100%);
+            border: 3px solid #ab47bc;
+            max-width: 900px;
+        }
+
+        .pipeline-steps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pipeline-step {
+            background: linear-gradient(135deg, #e1bee7 0%, #d1c4e9 100%);
+            border: 3px solid #ba68c8;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .hybrid-search {
+            background: linear-gradient(135deg, #ffab91 0%, #ff8a65 100%);
+            border: 3px solid #ff7043;
+            max-width: 900px;
+        }
+
+        .search-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .search-method {
+            background: linear-gradient(135deg, #ffccbc 0%, #ffab91 100%);
+            border: 3px solid #ff8a65;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .reranking {
+            background: linear-gradient(135deg, #80deea 0%, #4dd0e1 100%);
+            border: 3px solid #26c6da;
+            max-width: 900px;
+        }
+
+        .final-results {
+            background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+            border: 3px solid #66bb6a;
+            max-width: 900px;
+        }
+
+        .box-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .box-subtitle {
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .box-content {
+            font-size: 13px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .box-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .box-content li {
+            margin: 5px 0;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 40px;
+            color: #00897b;
+            margin: 10px 0;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .step-label {
+            text-align: center;
+            font-size: 14px;
+            color: #00897b;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .flow-arrows {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .flow-arrow-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .component-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+            padding-bottom: 8px;
+        }
+
+        .component-content {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .highlight-box {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #00897b;
+        }
+
+        .split-arrows {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .split-arrows::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00897b, transparent);
+        }
+
+        @media print {
+            .download-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Arquitectura RAG Pipeline - Sistema de Búsqueda Híbrida</h1>
+            <button class="download-btn" onclick="downloadDiagram()">📥 Descargar Diagrama</button>
+        </div>
+
+        <div class="workflow-diagram" id="diagram">
+            <!-- CORE RAG LAYER -->
+            <div class="box core-rag">
+                <div class="box-title">CAPA CORE RAG</div>
+                <div class="box-subtitle">src/agents/rag_agent/rag/</div>
+            </div>
+
+            <div class="split-arrows">
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+            </div>
+
+            <!-- MAIN COMPONENTS -->
+            <div class="components-grid">
+                <div class="component ingestion">
+                    <div class="component-title">INGESTION</div>
+                    <div class="component-content">
+                        Componente de ingesta de datos
+                    </div>
+                </div>
+
+                <div class="component search">
+                    <div class="component-title">SEARCH</div>
+                    <div class="component-content">
+                        Componente de búsqueda
+                    </div>
+                </div>
+
+                <div class="component evaluators">
+                    <div class="component-title">EVALUATORS</div>
+                    <div class="component-content">
+                        Componente de evaluación
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrows">
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+                <div class="flow-arrow-item">
+                    <div class="arrow">↓</div>
+                </div>
+            </div>
+
+            <!-- SUB-COMPONENTS -->
+            <div class="components-grid">
+                <div class="component ingestion">
+                    <div class="component-title">WebSightLoader</div>
+                    <div class="component-content">
+                        Cargador principal de datos WebSight
+                    </div>
+                </div>
+
+                <div class="component search">
+                    <div class="component-title">Métodos de Búsqueda</div>
+                    <div class="component-content">
+                        <ul>
+                            <li>BM25Search</li>
+                            <li>PineconeSearch</li>
+                            <li>CrossEncoder</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="component evaluators">
+                    <div class="component-title">evaluate_retrieval.py</div>
+                    <div class="component-content">
+                        (solo para Evaluaciones)
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- WEBSIGHT LOADER DETAILS -->
+            <div class="box websight-loader">
+                <div class="box-title">WebSightLoader - Procesamiento de Datos</div>
+            </div>
+
+            <div class="functions-grid">
+                <!-- DOWNLOAD FUNCTION -->
+                <div class="function-box download-function">
+                    <div class="component-title">download_websight_data()</div>
+                    <div class="component-content">
+                        <ul>
+                            <li>Descarga HuggingFace dataset "webai-sh/websight"</li>
+                            <li>Guarda JSONs en data/websight/</li>
+                            <li>Activado por botón en Home de Streamlit</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- LOAD FUNCTION -->
+                <div class="function-box load-function">
+                    <div class="component-title">load_full_websight_pipeline()</div>
+                    <div class="component-content">
+                        <ul>
+                            <li>Lee data/websight/*.json (900 docs)</li>
+                            <li><strong>Estructura metadata:</strong>
+                                <ul>
+                                    <li>type (landing, dashboard, etc.)</li>
+                                    <li>description</li>
+                                    <li>components</li>
+                                </ul>
+                            </li>
+                            <li>Convierte a Document objects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- RAG PIPELINE -->
+            <div class="box rag-pipeline">
+                <div class="box-title">RagPipeline</div>
+                <div class="box-subtitle">core/rag_pipeline.py</div>
+            </div>
+
+            <div class="pipeline-steps">
+                <div class="pipeline-step">
+                    <div class="component-title">Chunking</div>
+                    <div class="component-content">
+                        <div class="highlight-box">
+                            <strong>Parámetros:</strong>
+                            <ul>
+                                <li>max_tokens: 400</li>
+                                <li>overlap: 100</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pipeline-step">
+                    <div class="component-title">Upload Pinecone</div>
+                    <div class="component-content">
+                        <div class="highlight-box">
+                            <ul>
+                                <li>Automático al init</li>
+                                <li>namespace: html-css-examples</li>
+                                <li>dimension: 384</li>
+                                <li>modelo: all-MiniLM-L6-v2</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- HYBRID SEARCH -->
+            <div class="box hybrid-search">
+                <div class="box-title">Búsqueda Híbrida en invoke()</div>
+            </div>
+
+            <div class="search-methods">
+                <div class="search-method">
+                    <div class="component-title">BM25</div>
+                    <div class="component-content">
+                        Búsqueda léxica
+                    </div>
+                </div>
+
+                <div class="search-method">
+                    <div class="component-title">Vector Search</div>
+                    <div class="component-content">
+                        Pinecone
+                    </div>
+                </div>
+
+                <div class="search-method">
+                    <div class="component-title">Fusion</div>
+                    <div class="component-content">
+                        Combina scores
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- RERANKING -->
+            <div class="box reranking">
+                <div class="box-title">Cross-Encoder Reranking</div>
+                <div class="box-subtitle">ms-marco-MiniLM-L-6-v2</div>
+                <div class="box-content">
+                    <div class="highlight-box">
+                        Refinamiento final de resultados usando modelo Cross-Encoder para mejor precisión semántica
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow">↓</div>
+
+            <!-- FINAL RESULTS -->
+            <div class="box final-results">
+                <div class="box-title">Top-K Resultados Finales</div>
+                <div class="box-content">
+                    <div class="highlight-box">
+                        <strong>Salida:</strong> Documentos ranqueados con html_code completo y metadata asociada
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadDiagram() {
+            const diagram = document.getElementById('diagram');
+            const button = document.querySelector('.download-btn');
+            
+            // Ocultar el botón temporalmente
+            button.style.display = 'none';
+            
+            html2canvas(diagram, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Restaurar el botón
+                button.style.display = 'inline-block';
+                
+                // Crear enlace de descarga
+                const link = document.createElement('a');
+                link.download = 'diagrama-flujo-rag-pipeline.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(error => {
+                button.style.display = 'inline-block';
+                alert('Error al generar la imagen: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

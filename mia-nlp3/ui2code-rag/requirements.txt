@@ -1,0 +1,64 @@
+# UI-to-Code Multi-Agent System Dependencies
+# Core system with RAG + Visual AI + Code Generation
+
+# Core dependencies
+numpy>=1.24.0
+pandas>=2.0.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+pyprojroot>=0.3.0
+pyparsing>=3.2.0
+
+# Web framework and UI
+streamlit>=1.44.1
+
+# AI and LLM integration
+openai>=1.0.0                    # OpenAI/OpenRouter API client
+sentence-transformers>=2.2.0     # Embeddings for RAG
+rank-bm25>=0.2.2                 # BM25 search
+
+# Vector database
+pinecone>=3.0.0
+
+# Document processing
+pdfplumber>=0.11.0               # PDF ingestion (legacy compatibility)
+
+# Image processing for UI-to-Code
+opencv-python>=4.8.0             # Computer vision and image analysis  
+pillow>=10.1.0                   # Image manipulation
+beautifulsoup4>=4.12.0           # HTML parsing and text extraction
+
+# Dataset loading
+datasets>=2.14.0                 # HuggingFace datasets (WebSight)
+
+# HTTP requests (for web scraping if needed)
+requests>=2.31.0                 # HTTP client
+
+# Testing (optional)
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+
+# Development tools (optional)
+black>=23.0.0                    # Code formatting
+flake8>=6.0.0                    # Linting
+isort>=5.12.0                    # Import sorting
+
+# Optional performance improvements
+# torch>=2.0.0                   # Uncomment for GPU acceleration
+# transformers>=4.30.0           # Uncomment for local models
+
+# Guardrails
+guardrails-ai>=0.6.7
+
+# A2A Dependencies
+click>=8.3.0,<9.0.0
+httpx>=0.28.1,<0.29.0
+pydantic>=2.11.9,<3.0.0
+uvicorn>=0.37.0,<0.38.0
+sse-starlette>=3.0.2,<4.0.0
+starlette>=0.48.0,<0.49.0
+a2a-sdk>=0.3.6,<0.4.0
+nest-asyncio>=1.6.0,<2.0.0
+loguru>=0.7.3,<0.8.0
+pydantic-settings>=2.11.0,<3.0.0

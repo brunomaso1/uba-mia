@@ -1,0 +1,25 @@
+[project]
+name = "code-agent"
+version = "0.1.0"
+description = "Code agent"
+authors = [{ name = "NLP3", email = "npl3@abc.com" }]
+license = { text = "MIT" }
+readme = "readme.md"
+requires-python = ">3.10,<4.0"
+dependencies = [
+    "pydantic-settings (>=2.11.0,<3.0.0)",
+    "openai (>=1.109.1,<2.0.0)",
+    "a2a-sdk[http-server] (>=0.3.7,<0.4.0)",
+    "click (>=8.1.8,<9.0.0)",
+    "uvicorn (>=0.37.0,<0.38.0)",
+    "loguru (>=0.7.3,<0.8.0)",
+    "guardrails-ai (>=0.6.7,<0.7.0)",
+    "beautifulsoup4 (>=4.14.2,<5.0.0)",
+]
+
+[tool.poetry]
+packages = [{ include = "src" }]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

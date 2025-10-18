@@ -1,0 +1,52 @@
+name: NLP3
+
+services:
+  code-agent:
+    build:
+      context: ./src/agents/code_a2a_agent
+      dockerfile: Dockerfile
+    container_name: code-agent
+    env_file:
+      - ./src/agents/code_a2a_agent/.env
+    ports:
+      - "10001:10001"
+    restart: unless-stopped
+    networks:
+      - agents-net
+
+  visual-agent:
+    build:
+      context: ./src/agents/visual_a2a_agent
+      dockerfile: Dockerfile
+    container_name: visual-agent
+    env_file:
+      - ./src/agents/visual_a2a_agent/.env
+    ports:
+      - "10000:10000"
+    restart: unless-stopped
+    networks:
+      - agents-net
+
+  streamlit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: streamlit-app
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+    networks:
+      - agents-net
+    depends_on:
+      - code-agent
+      - visual-agent
+    volumes:
+      - ./data:/app/data:rw
+    environment:
+      - DATA_DIR=/app/data
+
+networks:
+  agents-net:
+    driver: bridge
