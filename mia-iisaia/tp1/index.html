@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Captcha Chino Flotante</title>
+    <style>
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #0d47a1;
+            --surface: #ffffff;
+            --background: #f3f6fb;
+            --error: #d32f2f;
+            --success: #2e7d32;
+            --text: #1f2937;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: radial-gradient(circle at top, #dbeafe 0%, #eff6ff 30%, var(--background) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        main {
+            width: min(100%, 1100px);
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .panel,
+        .captcha-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .panel {
+            padding: 24px;
+        }
+
+        .panel h1 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.7rem;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .field input {
+            width: 100%;
+            accent-color: var(--primary);
+        }
+
+        .value {
+            color: var(--primary-dark);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), #42a5f5);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 18px rgba(25, 118, 210, 0.28);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .captcha-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 760px;
+            padding: 24px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .captcha-sequence {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            min-height: 60px;
+        }
+
+        .captcha-slot {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e3f2fd;
+            border: 2px dashed rgba(25, 118, 210, 0.35);
+            font-size: 1.7rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .captcha-slot.filled {
+            background: #bbdefb;
+            border-style: solid;
+            transform: scale(1.04);
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: #e8f5e9;
+            color: var(--success);
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .timer.warning {
+            background: #ffebee;
+            color: var(--error);
+        }
+
+        .play-area {
+            position: relative;
+            height: 650px;
+            border-radius: 20px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            overflow: hidden;
+            border: 1px solid rgba(25, 118, 210, 0.08);
+        }
+
+
+
+        .hanzi {
+            position: absolute;
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111111;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            transition: transform 0.15s ease, background 0.15s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .hanzi:hover {
+            transform: scale(1.08);
+            background: #f0f7ff;
+        }
+
+        .hanzi.correct {
+            background: #c8e6c9;
+            pointer-events: none;
+        }
+
+        .hanzi.wrong {
+            background: #ffcdd2;
+            animation: shake 0.25s linear;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-4px);
+            }
+
+            50% {
+                transform: translateX(4px);
+            }
+
+            75% {
+                transform: translateX(-2px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .status {
+            margin-top: 16px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        .status.success {
+            color: var(--success);
+        }
+
+        .status.error {
+            color: var(--error);
+        }
+
+        @media (max-width: 900px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+
+            .captcha-card {
+                min-height: auto;
+            }
+
+            .play-area {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <aside class="panel">
+            <h1>Captcha Chino</h1>
+
+            <section class="field">
+                <label for="timeRange">Tiempo límite</label>
+                <input type="range" id="timeRange" min="5" max="30" value="15" />
+                <span class="value"><span id="timeValue">15</span> segundos</span>
+            </section>
+
+            <section class="field">
+                <label for="charRange">Cantidad de caracteres</label>
+                <input type="range" id="charRange" min="2" max="10" value="6" />
+                <span class="value"><span id="charValue">6</span> caracteres</span>
+            </section>
+
+            <button id="startButton">Generar Captcha</button>
+
+            <section style="margin-top:24px; line-height:1.6; font-size:0.95rem;">
+                <strong>Instrucciones:</strong>
+                <ul>
+                    <li>Selecciona los caracteres en el orden correcto.</li>
+                    <li>Los símbolos vuelan desde el centro.</li>
+                    <li>Debes terminar antes del límite de tiempo.</li>
+                </ul>
+            </section>
+        </aside>
+
+        <section class="captcha-card">
+            <header class="top-bar">
+                <div class="captcha-sequence" id="captchaSequence"></div>
+                <div class="timer" id="timer">15s</div>
+            </header>
+
+            <section class="play-area" id="playArea" aria-label="Área interactiva del captcha">
+            </section>
+
+            <footer>
+                <div class="status" id="status"></div>
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        const chineseChars = [
+            '你', '好', '学', '习', '天', '地', '人', '山', '水', '火', '风', '雨', '龙', '虎', '猫', '狗', '爱', '心', '光', '电',
+            '中', '国', '日', '月', '星', '海', '花', '草', '木', '金', '土', '空', '云', '雪', '春', '夏', '秋', '冬', '车', '马',
+            '书', '画', '茶', '米', '面', '门', '家', '友', '笑', '梦', '音', '乐', '飞', '鱼', '鸟', '白', '黑', '红', '青', '黄',
+            '南', '北', '东', '西', '王', '子', '女', '男', '力', '气', '神', '明', '石', '竹', '田', '雨', '雷', '电', '夜', '朝',
+            '安', '平', '福', '寿', '喜', '信', '真', '美', '快', '慢', '高', '低', '长', '短', '古', '今', '文', '字', '语', '言'
+        ];
+
+        const playArea = document.getElementById('playArea');
+        const captchaSequence = document.getElementById('captchaSequence');
+        const timerElement = document.getElementById('timer');
+        const statusElement = document.getElementById('status');
+        const timeRange = document.getElementById('timeRange');
+        const charRange = document.getElementById('charRange');
+        const timeValue = document.getElementById('timeValue');
+        const charValue = document.getElementById('charValue');
+        const startButton = document.getElementById('startButton');
+
+        let captcha = [];
+        let selectedIndex = 0;
+        let timer = null;
+        let timeLeft = 15;
+        let particles = [];
+        let animationFrame = null;
+
+        timeRange.addEventListener('input', () => {
+            timeValue.textContent = timeRange.value;
+        });
+
+        charRange.addEventListener('input', () => {
+            charValue.textContent = charRange.value;
+        });
+
+        function randomBetween(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function clearCharacters() {
+            document.querySelectorAll('.hanzi').forEach(el => el.remove());
+            particles = [];
+            cancelAnimationFrame(animationFrame);
+        }
+
+        function createCaptcha() {
+            clearCharacters();
+            statusElement.textContent = '';
+            statusElement.className = 'status';
+            captchaSequence.innerHTML = '';
+            selectedIndex = 0;
+
+            const count = parseInt(charRange.value, 10);
+            const shuffled = shuffle(chineseChars);
+            captcha = shuffled.slice(0, count);
+
+            captcha.forEach((char) => {
+                const slot = document.createElement('div');
+                slot.className = 'captcha-slot';
+                slot.textContent = char;
+                captchaSequence.appendChild(slot);
+            });
+
+            const cloud = shuffle(chineseChars).slice(0, 70);
+            captcha.forEach(char => {
+                if (!cloud.includes(char)) {
+                    cloud.push(char);
+                }
+            });
+
+            const finalCloud = shuffle(cloud);
+
+            finalCloud.forEach(char => {
+                spawnCharacter(char);
+            });
+
+            startTimer();
+            animate();
+        }
+
+        function spawnCharacter(char) {
+            const el = document.createElement('button');
+            el.className = 'hanzi';
+            el.type = 'button';
+            el.textContent = char;
+
+            const rect = playArea.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = randomBetween(0.3, 1.4);
+
+            const particle = {
+                el,
+                char,
+                x: centerX,
+                y: centerY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                rotation: randomBetween(-0.8, 0.8),
+            };
+
+            el.style.left = `${particle.x}px`;
+            el.style.top = `${particle.y}px`;
+
+            el.addEventListener('click', () => handleSelection(particle));
+
+            playArea.appendChild(el);
+            particles.push(particle);
+        }
+
+        function handleSelection(particle) {
+            if (timeLeft <= 0) return;
+
+            const expected = captcha[selectedIndex];
+
+            if (particle.char === expected) {
+                particle.el.classList.remove('wrong');
+                particle.el.classList.add('correct');
+
+                const slot = captchaSequence.children[selectedIndex];
+                slot.textContent = expected;
+                slot.classList.add('filled');
+
+                selectedIndex++;
+
+                if (selectedIndex >= captcha.length) {
+                    finishSuccess();
+                }
+            } else {
+                particle.el.classList.remove('wrong');
+                void particle.el.offsetWidth;
+                particle.el.classList.add('wrong');
+
+                statusElement.textContent = `Incorrecto. Debes seleccionar: ${expected}`;
+                statusElement.className = 'status error';
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = parseInt(timeRange.value, 10);
+            updateTimer();
+
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    failCaptcha();
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            timerElement.textContent = `${timeLeft}s`;
+
+            if (timeLeft <= 5) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+        }
+
+        function finishSuccess() {
+            clearInterval(timer);
+            statusElement.textContent = 'Captcha completado correctamente.';
+            statusElement.className = 'status success';
+        }
+
+        function failCaptcha() {
+            statusElement.textContent = 'Tiempo agotado. Intenta nuevamente.';
+            statusElement.className = 'status error';
+        }
+
+        function animate() {
+            const rect = playArea.getBoundingClientRect();
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x <= 0 || p.x >= rect.width - 58) {
+                    p.vx *= -1;
+                }
+
+                if (p.y <= 0 || p.y >= rect.height - 58) {
+                    p.vy *= -1;
+                }
+
+                p.el.style.transform = `rotate(${p.rotation * p.x}deg)`;
+                p.el.style.left = `${p.x}px`;
+                p.el.style.top = `${p.y}px`;
+            });
+
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+        startButton.addEventListener('click', createCaptcha);
+
+        createCaptcha();
+    </script>
+</body>
+
+</html>

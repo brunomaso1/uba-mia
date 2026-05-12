@@ -1,5 +1,8 @@
-# uba-mia
-Repositorio de la Maestría en Inteligencia Artificial (MIA) - Universidad de Buenos Aires (UBA)
+# Introducción a al ingeniería de software asistida por IA
 
-## Estructura
-Cada rama es una materia.
+| Atributo | Valor                                                    |
+| -------- | -------------------------------------------------------- |
+| Carrera  | Maestría en Inteligencia Artificial                      |
+| Facultad | FIUBA (LSE)                                                      |
+| Materia  | Introducción a la ingeniería de software asistida por IA |
+
