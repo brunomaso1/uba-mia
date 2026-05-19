@@ -3,6 +3,6 @@
 | Atributo | Valor                                                    |
 | -------- | -------------------------------------------------------- |
 | Carrera  | Maestría en Inteligencia Artificial                      |
-| Facultad | FIUBA (LSE)                                                      |
+| Facultad | FIUBA (LSE)                                              |
 | Materia  | Introducción a la ingeniería de software asistida por IA |
 
