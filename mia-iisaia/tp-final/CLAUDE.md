@@ -56,8 +56,8 @@ docker compose -f infra/docker-compose.yml exec backend alembic revision --autog
 
 ### Apply seed data
 ```bash
-docker compose -f infra/docker-compose.yml exec db \
-  psql -U expense_user -d expense_db -f /seeds/01-seed.sql
+docker compose -f infra/docker-compose.yml exec -T db \
+  psql -U expense_user -d expense_db < db/seeds/01-seed.sql
 ```
 
 ## Key Design Decisions
@@ -68,3 +68,4 @@ docker compose -f infra/docker-compose.yml exec db \
 - `BACKEND_CORS_ORIGINS` must be a JSON array string in docker-compose env: `'["http://localhost:4200"]'`; pydantic-settings parses it automatically.
 - Angular 22 uses Vitest for testing (not Karma). Run `ng test` without `--browsers ChromeHeadless`.
 - Frontend Dockerfile uses `node:24-alpine` — Angular 22 requires Node `>=22.22.3`.
+- Keycloak is configured with `KC_HOSTNAME: localhost` for dev. The `iss` claim in JWTs will be `http://localhost:8080/realms/expense-app`. When implementing JWT validation in the backend, validate against `http://localhost:8080` (not `http://keycloak:8080`) to match the issued tokens.
