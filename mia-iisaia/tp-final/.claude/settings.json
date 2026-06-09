@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/maso/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/**)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(Get-ChildItem *)",
+      "Bash(Get-Content *)",
+      "Bash(Select-Object *)",
+      "Bash(mkdir *)",
+      "Bash(Remove-Item *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git commit -m ' *)",
+      "Bash(docker *)",
+      "Bash(npm *)",
+      "Bash(ng *)",
+      "Bash(pip *)",
+      "Bash(pytest *)",
+      "Bash(uvicorn *)",
+      "Bash(alembic *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push --force *)",
+      "Bash(git reset --hard *)",
+      "Bash(git branch -D *)",
+      "Bash(docker volume rm *)",
+      "Bash(docker system prune *)"
+    ]
+  }
+}

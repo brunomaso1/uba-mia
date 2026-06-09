@@ -1,19 +1,27 @@
-# CLAUDE.md
+# Project conventions for Claude Code
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Overview
+
+This repository contains a multi-user expense management application built with Angular 22 (frontend), FastAPI 0.136.3 (backend), Keycloak 26.6.0 (authentication), and PostgreSQL 19 (database). The services are orchestrated using Docker Compose for easy local development.
 
 ## Architecture
 
 Multi-user expense management app. Services are orchestrated via Docker Compose from `infra/`.
 
-| Component  | Technology       | Port | Role |
-|------------|------------------|------|------|
-| `frontend` | Angular 22       | 4200 | SPA — delegates auth to Keycloak via PKCE |
-| `backend`  | FastAPI 0.136.3  | 8000 | REST API — validates JWT via Keycloak JWKS |
-| `keycloak` | Keycloak 26.6.0  | 8080 | Auth server — issues JWT tokens |
-| `db`       | PostgreSQL 19    | 5432 | Persistence |
+| Component  | Folder    | Technology      | Port | Role                                       |
+| ---------- | --------- | --------------- | ---- | ------------------------------------------ |
+| `frontend` | /frontend | Angular v22     | 4200 | SPA — delegates auth to Keycloak via PKCE  |
+| `backend`  | /backend  | FastAPI 0.136.3 | 8000 | REST API — validates JWT via Keycloak JWKS |
+| `keycloak` | /keycloak | Keycloak 26.6.0 | 8080 | Auth server — issues JWT tokens            |
+| `db`       | /db       | PostgreSQL 19   | 5432 | Persistence                                |
 
 Auth flow: Angular redirects to Keycloak (PKCE login) → Keycloak returns JWT → Angular HTTP interceptor attaches `Authorization: Bearer <token>` to all API requests → FastAPI validates JWT signature locally via JWKS endpoint (no roundtrip per request).
+
+## Git Conventions
+- This project uses only the `mia-iisaia` branch. Do not create new branches or pull requests.
+- Do not push to origin directly.
+- Commits should be atomic and descriptive of the change.
+- Use conventional commit messages (e.g., `feat: add expense form`, `fix: correct JWT validation logic`).
 
 ## Development Commands
 
