@@ -1,2 +1,5 @@
+# Backend: run Ruff lint + format via pre-commit
+(cd mia-iisaia/tp-final/backend && uv run pre-commit run --config .pre-commit-config.yaml --hook-stage pre-commit)
+
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR/.." && npx lint-staged
