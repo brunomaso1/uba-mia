@@ -6,6 +6,7 @@ repos:
         entry: bash -c 'cd mia-iisaia/tp-final/backend && uv run ruff check --fix'
         language: system
         types: [python]
+        files: ^mia-iisaia/tp-final/backend/
         pass_filenames: false
 
       - id: ruff-format

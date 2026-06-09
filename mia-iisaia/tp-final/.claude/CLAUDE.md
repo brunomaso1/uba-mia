@@ -25,6 +25,7 @@ Auth flow: Angular redirects to Keycloak (PKCE login) → Keycloak returns JWT �
 
 ## Git Conventions
 - This project uses only the `mia-iisaia` branch. Do not create new branches or pull requests.
+- The folder of the project is `tp-final/` — all commits should be made to files within this folder. But this folder is not the root of the repository, so be careful with paths in commit messages and commands.
 - Do not push to origin directly.
 - Commits should be atomic and descriptive of the change.
 - Use conventional commit messages (e.g., `feat: add expense form`, `fix: correct JWT validation logic`).
