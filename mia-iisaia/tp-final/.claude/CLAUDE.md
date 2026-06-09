@@ -17,6 +17,12 @@ Multi-user expense management app. Services are orchestrated via Docker Compose 
 
 Auth flow: Angular redirects to Keycloak (PKCE login) → Keycloak returns JWT → Angular HTTP interceptor attaches `Authorization: Bearer <token>` to all API requests → FastAPI validates JWT signature locally via JWKS endpoint (no roundtrip per request).
 
+# Claude code conventions and project structure
+
+- Use `bash` for shell commands, not `sh` or `zsh` or `PowerShell`.
+- Don't use `PowerShell` commands on the shell or in documentation.
+- Use `docker compose` instead of `docker-compose`.
+
 ## Git Conventions
 - This project uses only the `mia-iisaia` branch. Do not create new branches or pull requests.
 - Do not push to origin directly.
@@ -38,10 +44,10 @@ docker compose -f infra/docker-compose.yml up db keycloak
 ### Backend
 ```bash
 cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload          # local dev with hot reload
-pytest                                  # all tests
-pytest tests/test_health.py -v         # single file
+uv sync                                # install all deps (includes dev)
+uv run uvicorn app.main:app --reload   # local dev with hot reload
+uv run pytest                          # all tests
+uv run pytest tests/test_health.py -v  # single file
 ```
 
 ### Frontend

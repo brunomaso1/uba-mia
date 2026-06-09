@@ -11,7 +11,12 @@ paths:
 - SQLAlchemy (async)
 - Alembic
 - PostgreSQL 19
+- uv (package manager) 
 - Testing: pytest
+
+# Code conventions
+- Use snake_case for variables, functions, and file names.
+- Use uv for dependency management and scripts. Do not use pip or poetry.
 
 ## Project structure
 - `app/main.py` — FastAPI app entrypoint, router registration, CORS config.
