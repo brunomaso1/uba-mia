@@ -26,3 +26,18 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+# E/F: pycodestyle errors + pyflakes (basic correctness)
+# I: isort (import sorting)
+# UP: pyupgrade (modernize syntax for Python 3.12)
+# B: flake8-bugbear (common bugs and design issues)
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
