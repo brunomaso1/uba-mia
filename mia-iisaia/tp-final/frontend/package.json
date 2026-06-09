@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "format": "prettier --write \"src/**/*.{ts,html,scss,css,json}\" \"*.json\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,css,json}\" \"*.json\""
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,css,json}\" \"*.json\"",
+    "prepare": "cd ../../.. && husky mia-iisaia/tp-final/frontend/.husky"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -26,9 +27,14 @@
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.0.0",
+    "lint-staged": "^17.0.7",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
+  },
+  "lint-staged": {
+    "*.{ts,html,scss,css,json}": "prettier --write"
   }
 }
