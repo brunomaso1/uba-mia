@@ -1,6 +1,6 @@
 ---
-description: FastAPI backend conventions and best practices
-globs: backend/**
+paths: 
+  - backend/**/*
 ---
 
 # Backend Rules — FastAPI 0.136.3

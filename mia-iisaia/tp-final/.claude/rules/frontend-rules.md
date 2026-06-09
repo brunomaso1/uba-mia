@@ -1,6 +1,6 @@
 ---
-description: Angular 22 frontend conventions and best practices
-globs: frontend/**
+paths: 
+  - frontend/**/*
 ---
 
 # Frontend Rules — Angular 22
