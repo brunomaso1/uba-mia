@@ -1,7 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/Users/maso/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/**)",
+      "Read",
       "Bash(ls *)",
       "Bash(find *)",
       "Bash(mkdir *)",
