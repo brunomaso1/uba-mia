@@ -5,7 +5,7 @@ services:
     build:
       context: ./db
       args:
-        POSTGRES_VERSION: ${POSTGRES_VERSION:-19}
+        POSTGRES_VERSION: ${POSTGRES_VERSION:-17}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -70,6 +70,7 @@ services:
       start_period: 10s
     volumes:
       - ./backend:/app
+      - backend_venv:/app/.venv
 
   frontend:
     build:
@@ -88,3 +89,4 @@ services:
 
 volumes:
   postgres_data:
+  backend_venv:
