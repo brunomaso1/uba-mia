@@ -1,4 +1,5 @@
-FROM node:24-alpine
+ARG NODE_VERSION=24-alpine
+FROM node:${NODE_VERSION}
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
