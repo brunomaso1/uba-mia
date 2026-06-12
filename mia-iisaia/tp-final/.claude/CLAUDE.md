@@ -6,7 +6,7 @@ This repository contains a multi-user expense management application built with 
 
 ## Architecture
 
-Multi-user expense management app. Services are orchestrated via Docker Compose from `infra/`.
+Multi-user expense management app. Services are orchestrated via Docker Compose (`compose.yaml` at the project root).
 
 | Component  | Folder    | Technology      | Port | Role                                       |
 | ---------- | --------- | --------------- | ---- | ------------------------------------------ |
@@ -29,17 +29,18 @@ Auth flow: Angular redirects to Keycloak (PKCE login) â†’ Keycloak returns JWT â
 - Do not push to origin directly.
 - Commits should be atomic and descriptive of the change.
 - Use conventional commit messages (e.g., `feat: add expense form`, `fix: correct JWT validation logic`).
+- Git's single `pre-commit` hook lives in `frontend/.husky/pre-commit` and runs two things in sequence: backend `ruff` lint+format (via `uv run pre-commit`) and frontend `lint-staged` (via `npx`). It fires on every commit regardless of which files were changed.
 
 ## Development Commands
 
 ### Full stack
 ```bash
-docker compose -f infra/docker-compose.yml up --build
+docker compose up --build
 ```
 
 ### Infra only (db + keycloak), developing backend/frontend locally
 ```bash
-docker compose -f infra/docker-compose.yml up db keycloak
+docker compose up db keycloak
 ```
 
 ### Backend
@@ -63,15 +64,15 @@ ng build                                # production build
 ### Database migrations (Alembic)
 ```bash
 # Apply all pending migrations
-docker compose -f infra/docker-compose.yml exec backend alembic upgrade head
+docker compose exec backend alembic upgrade head
 
 # Generate a new migration from model changes
-docker compose -f infra/docker-compose.yml exec backend alembic revision --autogenerate -m "description"
+docker compose exec backend alembic revision --autogenerate -m "description"
 ```
 
 ### Apply seed data
 ```bash
-docker compose -f infra/docker-compose.yml exec -T db \
+docker compose exec -T db \
   psql -U expense_user -d expense_db < db/seeds/01-seed.sql
 ```
 

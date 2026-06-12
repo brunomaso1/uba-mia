@@ -1,3 +1,5 @@
+name: expense-app
+
 services:
   db:
     image: postgres:19
@@ -9,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ../db/init:/docker-entrypoint-initdb.d
+      - ./db/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     healthcheck:
@@ -19,7 +21,7 @@ services:
       retries: 10
 
   keycloak:
-    build: ../keycloak
+    build: ./keycloak
     restart: unless-stopped
     env_file: .env
     environment:
@@ -39,7 +41,7 @@ services:
         condition: service_healthy
 
   backend:
-    build: ../backend
+    build: ./backend
     restart: unless-stopped
     env_file: .env
     environment:
@@ -60,10 +62,10 @@ services:
       retries: 10
       start_period: 10s
     volumes:
-      - ../backend:/app
+      - ./backend:/app
 
   frontend:
-    build: ../frontend
+    build: ./frontend
     restart: unless-stopped
     ports:
       - "4200:4200"
@@ -71,7 +73,7 @@ services:
       backend:
         condition: service_healthy
     volumes:
-      - ../frontend:/app
+      - ./frontend:/app
       - /app/node_modules
 
 volumes:
