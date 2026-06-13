@@ -33,7 +33,7 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak_db:5432/${KEYCLOAK_POSTGRES_DB:-keycloak_db}
       KC_DB_USERNAME: ${KEYCLOAK_POSTGRES_USER:-admin}
       KC_DB_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD:-password}
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: ${KC_HOSTNAME:-localhost}
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
       KC_HEALTH_ENABLED: "true"
@@ -88,7 +88,7 @@ services:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_REALM: expense-app
       KEYCLOAK_CLIENT_ID: expense-frontend
-      BACKEND_CORS_ORIGINS: '["http://localhost:4200"]'
+      BACKEND_CORS_ORIGINS: '${BACKEND_CORS_ORIGINS:-["http://localhost:4200"]}'
     ports:
       - "8000:8000"
     depends_on:
