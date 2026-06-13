@@ -1,8 +1,28 @@
-ARG NODE_VERSION=24-alpine
-FROM node:${NODE_VERSION}
+# check=skip=InvalidDefaultArgInFrom
+ARG NODE_VERSION
+ARG NGINX_VERSION
+
+FROM node:${NODE_VERSION} AS builder
+
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+
+COPY package.json *package-lock.json* ./
+
+RUN --mount=type=cache,target=/root/.npm npm ci
+
 COPY . .
-EXPOSE 4200
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200", "--poll", "2000"]
+
+RUN npm run build 
+
+FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
+
+USER nginx
+
+EXPOSE 8080
+
+ENTRYPOINT ["nginx", "-c", "/etc/nginx/nginx.conf"]
+CMD ["-g", "daemon off;"]

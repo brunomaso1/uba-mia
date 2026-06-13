@@ -1,4 +1,6 @@
-FROM ghcr.io/astral-sh/uv:python3.11-bookworm-slim
+# check=skip=InvalidDefaultArgInFrom
+ARG UV_VERSION
+FROM ghcr.io/astral-sh/uv:${UV_VERSION}
 
 RUN groupadd --system --gid 999 nonroot \
     && useradd --system --gid 999 --uid 999 --create-home nonroot

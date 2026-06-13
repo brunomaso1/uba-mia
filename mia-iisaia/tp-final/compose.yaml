@@ -81,8 +81,7 @@ services:
     build:
       context: ./backend
       args:
-        PYTHON_VERSION: ${PYTHON_VERSION:-python3.12-bookworm-slim}
-        UV_VERSION: ${UV_VERSION:-latest}
+        UV_VERSION: ${UV_VERSION:-python3.12-bookworm-slim}
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-password}@app_db:5432/${POSTGRES_DB:-expense_db}
@@ -106,10 +105,11 @@ services:
     build:
       context: ./frontend
       args:
-        NODE_VERSION: ${NODE_VERSION:-24-alpine}
+        NODE_VERSION: ${NODE_VERSION:-26-alpine}
+        NGINX_VERSION: ${NGINX_VERSION:-1.31.1-alpine}
     restart: unless-stopped
     ports:
-      - "4200:4200"
+      - "4200:8080"
     depends_on:
       backend:
         condition: service_healthy
