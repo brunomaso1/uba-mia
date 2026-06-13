@@ -1,12 +1,12 @@
 import uuid
 
 import pytest
-from app.deps import get_db
-from app.services import category as category_service
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.deps import get_db
 from app.main import app
+from app.services import category as category_service
 
 # --- Service tests ---
 

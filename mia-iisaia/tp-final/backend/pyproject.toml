@@ -37,6 +37,8 @@ target-version = "py312"
 # UP: pyupgrade (modernize syntax for Python 3.12)
 # B: flake8-bugbear (common bugs and design issues)
 select = ["E", "F", "I", "UP", "B"]
+# B008: FastAPI uses Depends() in argument defaults by design
+ignore = ["B008"]
 
 [tool.ruff.format]
 quote-style = "double"
