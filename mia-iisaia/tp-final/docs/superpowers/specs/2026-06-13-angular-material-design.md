@@ -5,11 +5,11 @@
 
 ## Goal
 
-Add Angular Material 22 to the frontend with a Deep Purple M3 theme and Roboto typography, so all future UI components have a consistent design system from the start.
+Add Angular Material 22 to the frontend with the `magenta-violet` pre-built M3 theme and Roboto typography, so all future UI components have a consistent design system from the start.
 
 ## Approach
 
-Use the official `ng add @angular/material` schematic (option A), which automates all integration steps. Post-install, manually adjust the generated theme palette to Deep Purple.
+Use the official `ng add @angular/material` schematic, which automates all integration steps. Select the `magenta-violet` pre-built theme during the schematic prompts.
 
 ## What gets configured
 
@@ -21,8 +21,8 @@ Use the official `ng add @angular/material` schematic (option A), which automate
 - Google Fonts link for **Material Icons**.
 
 ### `styles.scss`
-- Global Material theme import using M3 `mat.theme()` with Deep Purple as the primary palette.
-- Global typography classes applied to `body` via `mat.theme()` typography config.
+- Pre-built M3 theme `magenta-violet` imported from `@angular/material/prebuilt-themes/magenta-violet.css`.
+- Global typography classes applied to `body`.
 - `mat-icon` font family set to Material Icons.
 
 ### `app.config.ts`
@@ -31,15 +31,13 @@ Use the official `ng add @angular/material` schematic (option A), which automate
 ## Theme details
 
 - **Design system:** Material Design 3 (M3) — default in Angular Material 22.
-- **Primary source color:** `#673AB7` (Deep Purple). M3 derives the full tonal palette (primary, secondary, tertiary, error, neutral) automatically from this single seed color via the Material color algorithm.
+- **Theme:** `magenta-violet` pre-built theme (ships with Angular Material, no custom SCSS needed).
 - **Typography:** Roboto loaded from Google Fonts; applied globally via Material's typography system.
 - **Animations:** async (lazy-loaded, does not block initial render).
-- **Theme generation:** The `ng add` schematic generates a custom M3 theme file (`_theme.scss` or inline in `styles.scss`) using `mat.theme()` with `$primary: mat.define-theme-color(#673AB7)`.
 
 ## Out of scope
 
 - No UI components are built in this task — Material is installed and configured only.
-- No custom color overrides beyond selecting Deep Purple as the primary palette.
 - No dark mode configuration (can be added later).
 
 ## Success criteria
@@ -49,3 +47,4 @@ Use the official `ng add @angular/material` schematic (option A), which automate
 - The app loads in the browser with Roboto font visible.
 - `@angular/material` and `@angular/cdk` appear in `package.json`.
 - `provideAnimationsAsync()` is present in `app.config.ts`.
+- `magenta-violet.css` is imported in `styles.scss`.
