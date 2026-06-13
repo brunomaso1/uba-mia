@@ -1,7 +1,5 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-CREATE TABLE IF NOT EXISTS "user" (
-    id            UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+CREATE TABLE IF NOT EXISTS app_user (
+    id            UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
     keycloak_sub  TEXT          UNIQUE NOT NULL,
     display_name  TEXT          NOT NULL,
     email         TEXT          UNIQUE NOT NULL,
@@ -9,23 +7,23 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 
 CREATE TABLE IF NOT EXISTS "group" (
-    id          UUID        PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     name        TEXT        NOT NULL,
-    created_by  UUID        NOT NULL REFERENCES "user"(id) ON DELETE RESTRICT,
+    created_by  UUID        NOT NULL REFERENCES app_user(id) ON DELETE RESTRICT,
     created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS group_member (
-    user_id   UUID        NOT NULL REFERENCES "user"(id)  ON DELETE CASCADE,
+    user_id   UUID        NOT NULL REFERENCES app_user(id)  ON DELETE CASCADE,
     group_id  UUID        NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
     joined_at TIMESTAMPTZ DEFAULT NOW(),
     PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE IF NOT EXISTS expense (
-    id          UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id          UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id    UUID          NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
-    paid_by     UUID          NOT NULL REFERENCES "user"(id) ON DELETE RESTRICT,
+    paid_by     UUID          NOT NULL REFERENCES app_user(id) ON DELETE RESTRICT,
     amount      NUMERIC(12,2) NOT NULL CHECK (amount > 0),
     description TEXT,
     date        DATE          NOT NULL,
