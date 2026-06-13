@@ -6,12 +6,12 @@ paths:
 # Backend Rules — FastAPI 0.136.3
 
 ## Stack
-- Python
+- Python 3.12+
 - FastAPI 0.136.3
 - SQLAlchemy (async)
 - Alembic
-- PostgreSQL 19
-- uv (package manager) 
+- PostgreSQL 18.4 (image: `postgres:18.4`)
+- uv (package manager)
 - Testing: pytest
 
 # Code conventions
@@ -33,6 +33,7 @@ paths:
 
 ## Database
 - Use async SQLAlchemy sessions via the dependency in `app/deps.py`.
+- The app database Docker service is named `app_db` (port 5432). Keycloak has its own separate `keycloak_db` (port 5433).
 - All schema changes go through Alembic migrations — never modify `db/init/01-init.sql` for schema changes.
 - Generate migrations: `alembic revision --autogenerate -m "description"`.
 - Apply migrations: `alembic upgrade head`.

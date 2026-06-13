@@ -2,18 +2,19 @@
 
 ## Overview
 
-This repository contains a multi-user expense management application built with Angular 22 (frontend), FastAPI 0.136.3 (backend), Keycloak 26.6.0 (authentication), and PostgreSQL 19 (database). The services are orchestrated using Docker Compose for easy local development.
+This repository contains a multi-user expense management application built with Angular 22 (frontend), FastAPI 0.136.3 (backend), Keycloak 26.6.3 (authentication), and PostgreSQL 18.4 (database). The services are orchestrated using Docker Compose for easy local development.
 
 ## Architecture
 
 Multi-user expense management app. Services are orchestrated via Docker Compose (`compose.yaml` at the project root).
 
-| Component  | Folder    | Technology      | Port | Role                                       |
-| ---------- | --------- | --------------- | ---- | ------------------------------------------ |
-| `frontend` | /frontend | Angular v22     | 4200 | SPA — delegates auth to Keycloak via PKCE  |
-| `backend`  | /backend  | FastAPI 0.136.3 | 8000 | REST API — validates JWT via Keycloak JWKS |
-| `keycloak` | /keycloak | Keycloak 26.6.0 | 8080 | Auth server — issues JWT tokens            |
-| `db`       | /db       | PostgreSQL 19   | 5432 | Persistence                                |
+| Component     | Folder    | Technology      | Port | Role                                       |
+| ------------- | --------- | --------------- | ---- | ------------------------------------------ |
+| `frontend`    | /frontend | Angular v22     | 4200 | SPA — delegates auth to Keycloak via PKCE  |
+| `backend`     | /backend  | FastAPI 0.136.3 | 8000 | REST API — validates JWT via Keycloak JWKS |
+| `keycloak`    | /keycloak | Keycloak 26.6.3 | 8080 | Auth server — issues JWT tokens            |
+| `app_db`      | /db       | PostgreSQL 18.4 | 5432 | App persistence                            |
+| `keycloak_db` | —         | PostgreSQL 18.4 | 5433 | Keycloak persistence (separate instance)   |
 
 Auth flow: Angular redirects to Keycloak (PKCE login) → Keycloak returns JWT → Angular HTTP interceptor attaches `Authorization: Bearer <token>` to all API requests → FastAPI validates JWT signature locally via JWKS endpoint (no roundtrip per request).
 
@@ -38,9 +39,14 @@ Auth flow: Angular redirects to Keycloak (PKCE login) → Keycloak returns JWT �
 docker compose up --build
 ```
 
-### Infra only (db + keycloak), developing backend/frontend locally
+### Infra only (app_db + keycloak_db + keycloak), developing backend/frontend locally
 ```bash
-docker compose up db keycloak
+docker compose up app_db keycloak_db keycloak
+```
+
+### Dev extras (pgadmin at port 5050)
+```bash
+docker compose -f compose.yaml -f compose.dev.yaml up
 ```
 
 ### Backend
@@ -80,7 +86,10 @@ docker compose exec -T db \
 
 - `User.keycloak_sub` stores the JWT `sub` claim. Users are auto-created in the DB on first authenticated request to `GET /users/me` — no separate registration flow.
 - Keycloak realm `expense-app` is imported automatically on container start from `keycloak/realm-export.json`. Test users: `alice / alice123` and `bob / bob123`.
-- DB schema is initialized from `db/init/01-init.sql` on first PostgreSQL container start. Seeds in `db/seeds/` must be applied manually.
+- DB schema is initialized from `db/init/01-init.sql` on first PostgreSQL container start (`app_db` service). Seeds in `db/seeds/` must be applied manually.
+- Keycloak uses its own dedicated PostgreSQL instance (`keycloak_db`, port 5433) separate from the app database (`app_db`, port 5432).
+- Image versions are parameterized via environment variables. Copy `.env.example` to `.env` to configure; key vars: `POSTGRES_VERSION`, `KEYCLOAK_VERSION`, `PYTHON_VERSION`, `UV_VERSION`, `NODE_VERSION`. No `env_file` directives in compose — variables are injected via shell environment or `.env` file at the project root.
+- `compose.dev.yaml` extends the base compose with dev-only tooling. Currently adds pgadmin4 at port 5050 (admin@example.com / password), with access to both `app_db` and `keycloak_db`.
 - `BACKEND_CORS_ORIGINS` must be a JSON array string in docker-compose env: `'["http://localhost:4200"]'`; pydantic-settings parses it automatically.
 - Angular 22 uses Vitest for testing (not Karma). Run `ng test` without `--browsers ChromeHeadless`.
 - Frontend Dockerfile uses `node:24-alpine` — Angular 22 requires Node `>=22.22.3`.
