@@ -47,7 +47,14 @@ paths:
 - `BACKEND_CORS_ORIGINS` is a JSON array string in the environment. pydantic-settings parses it automatically.
 - Dev value: `'["http://localhost:4200"]'`.
 
+## Environment
+- `backend/.env` (gitignored) provides local dev overrides — copy from `backend/.env.example`.
+- Key vars: `DATABASE_URL`, `TEST_DATABASE_URL` (optional, falls back to `DATABASE_URL`), `API_VERSION`.
+- `compose.yaml` injects `DATABASE_URL` directly into the container; `backend/.env` is not used in Docker.
+- `DATABASE_URL` defaults in `Settings` match the `compose.yaml` defaults (`admin:password`).
+
 ## Testing
 - Run `pytest` from the `backend/` directory.
 - Use `pytest -v tests/<file>.py` for a single file.
-- Integration tests should use a real test database, not mocked sessions.
+- Integration tests use a real database — requires `app_db` container running (`docker compose up app_db -d`).
+- Test DB connection is read from `TEST_DATABASE_URL` env var, falling back to `DATABASE_URL`.

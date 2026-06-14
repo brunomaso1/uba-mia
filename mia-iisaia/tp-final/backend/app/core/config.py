@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "postgresql://expense_user:changeme@localhost:5432/expense_db"
+    database_url: str = "postgresql://admin:password@localhost:5432/expense_db"
     test_database_url: str = ""
     keycloak_url: str = "http://localhost:8080"
     keycloak_realm: str = "expense-app"
