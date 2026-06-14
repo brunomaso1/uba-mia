@@ -10,12 +10,19 @@ describe('ConfigService', () => {
     vi.restoreAllMocks();
   });
 
-  it('loads config.json and exposes apiUrl', async () => {
+  it('loads config.json and exposes apiUrl and authConfig', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({ apiUrl: 'http://test-host:9999' }),
+        json: async () => ({
+          apiUrl: 'http://test-host:9999',
+          auth: {
+            authority: 'http://kc/realms/r',
+            clientId: 'c',
+            scope: 'openid',
+          },
+        }),
       }),
     );
 
@@ -23,6 +30,7 @@ describe('ConfigService', () => {
     await service.load();
 
     expect(service.apiUrl()).toBe('http://test-host:9999');
+    expect(service.authConfig()?.clientId).toBe('c');
   });
 
   it('rejects when config.json fetch is not ok', async () => {
