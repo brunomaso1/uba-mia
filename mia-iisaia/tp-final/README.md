@@ -1,6 +1,6 @@
 # Expense Manager
 
-A multi-user expense management web application built as a final project for the MIA (Maestría en Informática Aplicada) at UBA. It allows groups of users to record and track shared expenses, with secure authentication delegated to Keycloak.
+A multi-user expense management web application. It allows groups of users to record and track shared expenses, with secure authentication delegated to Keycloak.
 
 The stack is fully containerized via Docker Compose and follows a strict separation of concerns: Angular SPA for the frontend, FastAPI REST API for the backend, Keycloak for identity, and PostgreSQL for persistence.
 
@@ -114,7 +114,7 @@ sequenceDiagram
 
 ```mermaid
 erDiagram
-    user {
+    users {
         uuid id PK
         text keycloak_sub UK
         text display_name
@@ -122,7 +122,7 @@ erDiagram
         timestamptz created_at
     }
 
-    group {
+    groups {
         uuid id PK
         text name
         uuid created_by FK
@@ -135,21 +135,31 @@ erDiagram
         timestamptz joined_at
     }
 
-    expense {
+    categories {
+        uuid id PK
+        text name UK
+        text description
+        boolean is_active
+        timestamptz created_at
+    }
+
+    expenses {
         uuid id PK
         uuid group_id FK
         uuid paid_by FK
+        uuid category_id FK
         numeric amount
         text description
         date date
         timestamptz created_at
     }
 
-    user ||--o{ group : "creates"
-    user ||--o{ group_member : "belongs to"
-    group ||--o{ group_member : "has"
-    group ||--o{ expense : "contains"
-    user ||--o{ expense : "pays"
+    users ||--o{ groups : "creates"
+    users ||--o{ group_member : "belongs to"
+    groups ||--o{ group_member : "has"
+    groups ||--o{ expenses : "contains"
+    users ||--o{ expenses : "pays"
+    categories ||--o{ expenses : "classifies"
 ```
 
 ---
@@ -198,7 +208,7 @@ docker compose up app_db keycloak_db keycloak
 # 2a. Backend (separate terminal)
 cd backend
 uv sync
-uv run uvicorn app.main:app --reload
+uv run fastapi dev
 
 # 2b. Frontend (separate terminal)
 cd frontend

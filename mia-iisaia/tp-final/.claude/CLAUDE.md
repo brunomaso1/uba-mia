@@ -53,7 +53,7 @@ docker compose -f compose.yaml -f compose.dev.yaml up
 ```bash
 cd backend
 uv sync                                # install all deps (includes dev)
-uv run uvicorn app.main:app --reload   # local dev with hot reload
+uv run fastapi dev                     # local dev with hot reload
 uv run pytest                          # all tests
 uv run pytest tests/test_health.py -v  # single file
 ```
@@ -94,3 +94,4 @@ docker compose exec -T db \
 - Angular 22 uses Vitest for testing (not Karma). Run `ng test` without `--browsers ChromeHeadless`.
 - Frontend Dockerfile uses `node:24-alpine` — Angular 22 requires Node `>=22.22.3`.
 - Keycloak is configured with `KC_HOSTNAME: localhost` for dev. The `iss` claim in JWTs will be `http://localhost:8080/realms/expense-app`. When implementing JWT validation in the backend, validate against `http://localhost:8080` (not `http://keycloak:8080`) to match the issued tokens.
+- Database tables should use plural names (e.g., `users`, `expenses`) for consistency. SQL files in `db/init/` should create tables with plural names.

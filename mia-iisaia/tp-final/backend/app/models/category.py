@@ -10,7 +10,7 @@ from app.db import Base
 
 
 class Category(Base):
-    __tablename__ = "category"
+    __tablename__ = "categories"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4

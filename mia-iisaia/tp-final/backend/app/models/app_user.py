@@ -10,7 +10,7 @@ from app.db import Base
 
 
 class AppUser(Base):
-    __tablename__ = "app_user"
+    __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
