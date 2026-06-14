@@ -2,13 +2,19 @@
   <h1>Runtime config check</h1>
   <p>API URL: {{ apiUrl() }}</p>
 
-  @if (testInfo.isLoading()) {
-    <p>Loading backend info…</p>
-  } @else if (testInfo.error()) {
-    <p role="alert">Could not reach the backend at {{ apiUrl() }}.</p>
-  } @else if (testInfo.value(); as info) {
-    <h2>Backend says:</h2>
-    <pre>{{ info | json }}</pre>
+  @if (authenticated().isAuthenticated) {
+    <button type="button" (click)="logout()">Logout</button>
+
+    @if (me.isLoading()) {
+      <p>Loading user…</p>
+    } @else if (me.error()) {
+      <p role="alert">Could not load the authenticated user.</p>
+    } @else if (me.value(); as user) {
+      <h2>Authenticated as:</h2>
+      <pre>{{ user | json }}</pre>
+    }
+  } @else {
+    <button type="button" (click)="login()">Login</button>
   }
 </main>
 
