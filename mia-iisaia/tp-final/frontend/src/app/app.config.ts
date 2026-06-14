@@ -6,17 +6,52 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import {
+  authInterceptor,
+  provideAuth,
+  StsConfigHttpLoader,
+  StsConfigLoader,
+  withAppInitializerAuthCheck,
+} from 'angular-auth-oidc-client';
+import { map } from 'rxjs';
 
 import { routes } from './app.routes';
-import { ConfigService } from './core/config.service';
+import { AppConfig, ConfigService } from './core/config.service';
+
+export const httpLoaderFactory = (http: HttpClient): StsConfigHttpLoader => {
+  const config$ = http.get<AppConfig>('/config.json').pipe(
+    map((cfg) => ({
+      authority: cfg.auth.authority,
+      redirectUrl: window.location.origin,
+      postLogoutRedirectUri: window.location.origin,
+      clientId: cfg.auth.clientId,
+      scope: cfg.auth.scope,
+      responseType: 'code',
+      silentRenew: true,
+      useRefreshToken: true,
+      secureRoutes: [cfg.apiUrl],
+    })),
+  );
+  return new StsConfigHttpLoader(config$);
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor()])),
     provideAppInitializer(() => inject(ConfigService).load()),
+    provideAuth(
+      {
+        loader: {
+          provide: StsConfigLoader,
+          useFactory: httpLoaderFactory,
+          deps: [HttpClient],
+        },
+      },
+      withAppInitializerAuthCheck(),
+    ),
   ],
 };
