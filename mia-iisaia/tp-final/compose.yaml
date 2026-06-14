@@ -95,10 +95,11 @@ services:
       app_db:
         condition: service_healthy
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")'"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/health")''',
+        ]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -111,6 +112,8 @@ services:
         NODE_VERSION: ${NODE_VERSION:-26-alpine}
         NGINX_VERSION: ${NGINX_VERSION:-1.31.1-alpine}
     restart: unless-stopped
+    environment:
+      API_URL: ${API_URL:-http://localhost:8000}
     ports:
       - "4200:8080"
     depends_on:
