@@ -36,10 +36,10 @@ On the first successful authenticated request to `GET /users/me`, the user is au
 
 **Test credentials (dev only):**
 
-| Username | Password   | Email               |
-| -------- | ---------- | ------------------- |
-| `alice`  | `alice123` | alice@example.com   |
-| `bob`    | `bob123`   | bob@example.com     |
+| Username | Password   | Email             |
+| -------- | ---------- | ----------------- |
+| `alice`  | `password` | alice@example.com |
+| `bob`    | `password` | bob@example.com   |
 
 ---
 
@@ -47,13 +47,13 @@ On the first successful authenticated request to `GET /users/me`, the user is au
 
 The application is composed of five services orchestrated via Docker Compose:
 
-| Service       | Folder      | Technology        | Port  | Role                                              |
-| ------------- | ----------- | ----------------- | ----- | ------------------------------------------------- |
-| `frontend`    | `/frontend` | Angular v22       | 4200  | SPA — delegates auth to Keycloak via PKCE         |
-| `backend`     | `/backend`  | FastAPI 0.136.3   | 8000  | REST API — validates JWT via Keycloak JWKS        |
-| `keycloak`    | `/keycloak` | Keycloak 26.6.3   | 8080  | Auth server — issues JWT tokens                   |
-| `app_db`      | `/db`       | PostgreSQL 18.4   | 5432  | Application persistence                           |
-| `keycloak_db` | —           | PostgreSQL 18.4   | 5433  | Keycloak persistence (dedicated instance)         |
+| Service       | Folder      | Technology      | Port | Role                                       |
+| ------------- | ----------- | --------------- | ---- | ------------------------------------------ |
+| `frontend`    | `/frontend` | Angular v22     | 4200 | SPA — delegates auth to Keycloak via PKCE  |
+| `backend`     | `/backend`  | FastAPI 0.136.3 | 8000 | REST API — validates JWT via Keycloak JWKS |
+| `keycloak`    | `/keycloak` | Keycloak 26.6.3 | 8080 | Auth server — issues JWT tokens            |
+| `app_db`      | `/db`       | PostgreSQL 18.4 | 5432 | Application persistence                    |
+| `keycloak_db` | —           | PostgreSQL 18.4 | 5433 | Keycloak persistence (dedicated instance)  |
 
 The `compose.dev.yaml` overlay adds `pgadmin` at port `5050` for database inspection during development.
 
@@ -182,12 +182,12 @@ The project supports four environments. Three run all services in Docker contain
 
 ### Overview
 
-| Environment              | Who runs it      | Infra        | App (backend + frontend) | Env file      |
-| ------------------------ | ---------------- | ------------ | ------------------------ | ------------- |
-| **Local — Hybrid**       | Developer        | Docker       | Local process            | *(none)*      |
-| **Local — Full**         | Developer        | Docker       | Docker                   | `.env.local`  |
-| **Development (VM)**     | Shared dev VM    | Docker       | Docker                   | `.env.dev`    |
-| **Production**           | Production host  | Docker       | Docker                   | `.env.prod`   |
+| Environment          | Who runs it     | Infra  | App (backend + frontend) | Env file     |
+| -------------------- | --------------- | ------ | ------------------------ | ------------ |
+| **Local — Hybrid**   | Developer       | Docker | Local process            | *(none)*     |
+| **Local — Full**     | Developer       | Docker | Docker                   | *(none)* |
+| **Development (VM)** | Shared dev VM   | Docker | Docker                   | `.env.dev`   |
+| **Production**       | Production host | Docker | Docker                   | `.env.prod`  |
 
 > **Keycloak hostname note:** `KC_HOSTNAME` controls the public hostname Keycloak uses to build the JWT `iss` claim (`http(s)://<KC_HOSTNAME>/realms/expense-app`). It must match exactly the hostname the **browser** uses to reach Keycloak, or authentication will fail.
 
@@ -216,11 +216,11 @@ npm install
 ng serve
 ```
 
-| Service   | URL                           |
-| --------- | ----------------------------- |
-| Frontend  | http://localhost:4200         |
-| Backend   | http://localhost:8000         |
-| Keycloak  | http://localhost:8080         |
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:4200 |
+| Backend  | http://localhost:8000 |
+| Keycloak | http://localhost:8080 |
 
 The backend `config.py` defaults point to `localhost:5432` (app_db) and `http://localhost:8080` (Keycloak), matching the ports exposed by the infrastructure containers.
 
@@ -228,29 +228,22 @@ The backend `config.py` defaults point to `localhost:5432` (app_db) and `http://
 
 ### 2. Local — Full Containers
 
-All five services run in Docker. Uses `.env.local`.
+All five services run in Docker. No env file needed — compose.yaml defaults cover local use.
 
 **Best for:** verifying that the full containerized stack works before pushing.
 
 **Prerequisites:** Docker
 
 ```bash
-docker compose --env-file .env.local up --build
+docker compose up --build
 ```
 
-| Service   | URL                           |
-| --------- | ----------------------------- |
-| Frontend  | http://localhost:4200         |
-| Backend   | http://localhost:8000         |
-| Keycloak  | http://localhost:8080         |
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:4200 |
+| Backend  | http://localhost:8000 |
+| Keycloak | http://localhost:8080 |
 
-**First-time setup:**
-
-```bash
-# Copy the template (only once)
-cp .env.example .env.local
-# Review .env.local — defaults are safe for local use, no changes required
-```
 
 To also start pgadmin at `:5050`:
 
@@ -276,18 +269,18 @@ cp .env.example .env.dev
 docker compose --env-file .env.dev up --build -d
 ```
 
-| Service   | URL                                    |
-| --------- | -------------------------------------- |
-| Frontend  | http://\<VM_HOSTNAME\>:4200            |
-| Backend   | http://\<VM_HOSTNAME\>:8000            |
-| Keycloak  | http://\<VM_HOSTNAME\>:8080            |
+| Service  | URL                         |
+| -------- | --------------------------- |
+| Frontend | http://\<VM_HOSTNAME\>:4200 |
+| Backend  | http://\<VM_HOSTNAME\>:8000 |
+| Keycloak | http://\<VM_HOSTNAME\>:8080 |
 
 **Key variables to set in `.env.dev`:**
 
-| Variable               | What to set                              |
-| ---------------------- | ---------------------------------------- |
+| Variable               | What to set                             |
+| ---------------------- | --------------------------------------- |
 | `KC_HOSTNAME`          | VM IP or hostname (e.g. `192.168.1.50`) |
-| `BACKEND_CORS_ORIGINS` | `["http://<VM_HOSTNAME>:4200"]`          |
+| `BACKEND_CORS_ORIGINS` | `["http://<VM_HOSTNAME>:4200"]`         |
 | All `*_PASSWORD` vars  | Any value stronger than the defaults    |
 
 ---
@@ -308,21 +301,21 @@ cp .env.example .env.prod
 docker compose --env-file .env.prod up --build -d
 ```
 
-| Service   | URL                                        |
-| --------- | ------------------------------------------ |
-| Frontend  | https://expense.yourdomain.com             |
-| Backend   | https://expense.yourdomain.com/api *(TBD)* |
-| Keycloak  | https://expense.yourdomain.com/auth *(TBD)*|
+| Service  | URL                                         |
+| -------- | ------------------------------------------- |
+| Frontend | https://expense.yourdomain.com              |
+| Backend  | https://expense.yourdomain.com/api *(TBD)*  |
+| Keycloak | https://expense.yourdomain.com/auth *(TBD)* |
 
 **Key variables to set in `.env.prod`:**
 
-| Variable               | What to set                                       |
-| ---------------------- | ------------------------------------------------- |
-| `KC_HOSTNAME`          | Production domain (e.g. `expense.yourdomain.com`) |
-| `BACKEND_CORS_ORIGINS` | `["https://expense.yourdomain.com"]`              |
-| `POSTGRES_PASSWORD`    | Strong random password                            |
-| `KEYCLOAK_POSTGRES_PASSWORD` | Strong random password                      |
-| `KC_BOOTSTRAP_ADMIN_PASSWORD` | Strong random password                     |
+| Variable                      | What to set                                       |
+| ----------------------------- | ------------------------------------------------- |
+| `KC_HOSTNAME`                 | Production domain (e.g. `expense.yourdomain.com`) |
+| `BACKEND_CORS_ORIGINS`        | `["https://expense.yourdomain.com"]`              |
+| `POSTGRES_PASSWORD`           | Strong random password                            |
+| `KEYCLOAK_POSTGRES_PASSWORD`  | Strong random password                            |
+| `KC_BOOTSTRAP_ADMIN_PASSWORD` | Strong random password                            |
 
 > `.env.prod` must **never** be committed to version control. It is listed in `.gitignore`.
 
@@ -337,23 +330,23 @@ The frontend reads environment-specific values at **runtime**, not at build time
 **Quick mental model (for `entrypoint.sh`):**
 
 1. `envsubst` reads environment variables from the running container.
-2. It reads `config.template.json` and replaces the allowed placeholders (e.g. `${API_URL}`, `${AUTH_AUTHORITY}`).
+2. It reads `config.template.json` and replaces the allowed placeholders (e.g. `${API_URL}`, `${API_VERSION}`, `${KEYCLOAK_AUTHORITY}`).
 3. It writes the rendered output to `config.json` (overwriting it if it already exists).
 
 In short: **template + environment variables -> final `config.json` served by Nginx**.
 
-| Environment              | How `config.json` is provided                                                                 |
-| ------------------------ | --------------------------------------------------------------------------------------------- |
-| **Local — Hybrid** (`ng serve`) | The committed `frontend/public/config.json` is served as-is (defaults to `http://localhost:8000`). |
+| Environment                          | How `config.json` is provided                                                                                                             |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Local — Hybrid** (`ng serve`)      | The committed `frontend/public/config.json` is served as-is (defaults to `http://localhost:8000/api/v1`).                                 |
 | **Local-Full / Dev / Prod** (Docker) | The container `entrypoint.sh` runs `envsubst` over `config.template.json`, producing `config.json` at startup from environment variables. |
-| **Kubernetes** (target deployment) | A ConfigMap is mounted over `config.json` — no `envsubst` needed. *(Conceptual: no manifests live in this repo yet.)* |
+| **Kubernetes** (target deployment)   | A ConfigMap is mounted over `config.json` — no `envsubst` needed. *(Conceptual: no manifests live in this repo yet.)*                     |
 
 **The two files in `frontend/public/`:**
 
-- **`config.json`** — committed with the local-dev default (`http://localhost:8000`). Used directly by `ng serve`. In Docker it is **overwritten** at container start by the step below, so the committed value only matters for local hybrid development.
+- **`config.json`** — committed with the local-dev default (`http://localhost:8000/api/v1`). Used directly by `ng serve`. In Docker it is **overwritten** at container start by the step below, so the committed value only matters for local hybrid development.
 - **`config.template.json`** — the template with placeholders like `${VAR_NAME}`. `frontend/entrypoint.sh` substitutes env vars into it via `envsubst` and writes the result to `config.json` before launching Nginx (`frontend/Dockerfile` sets it as the `ENTRYPOINT`).
 
-**Setting it in Docker:** `compose.yaml` passes runtime vars to the frontend service (for example `API_URL: ${API_URL:-http://localhost:8000}`). Override values per environment in the corresponding env file (`.env.local`, `.env.dev`, `.env.prod`) — e.g. `API_URL=https://expense.yourdomain.com`.
+**Setting it in Docker:** `compose.yaml` passes runtime vars to the frontend service (for example `API_URL: ${API_URL:-http://localhost:8000}` and `API_VERSION: ${API_VERSION:-v1}`). Override values per environment in the corresponding env file (`.env.dev`, `.env.prod`) — e.g. `API_URL=https://expense.yourdomain.com`.
 
 > **Adding a new runtime variable:** if `envsubst` is explicitly whitelisted in `frontend/entrypoint.sh`, adding a new runtime key requires updating both `frontend/public/config.template.json` and the whitelist in `frontend/entrypoint.sh`.
 >
@@ -439,8 +432,8 @@ docker compose up --build
 # Start in background
 docker compose up -d
 
-# Start with a specific env file
-docker compose --env-file .env.local up --build
+# Start with a specific env file (dev/prod environments)
+docker compose --env-file .env.dev up --build
 
 # Stop all services and remove containers
 docker compose down

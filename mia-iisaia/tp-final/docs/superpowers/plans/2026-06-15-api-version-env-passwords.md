@@ -12,16 +12,16 @@
 
 ## File map
 
-| File | Task | Change |
-|------|------|--------|
-| `frontend/public/config.template.json` | 1 | Add `${API_VERSION}` to apiUrl |
-| `frontend/public/config.json` | 1 | Update local default to include `/api/v1` |
-| `compose.yaml` | 1 | Add `API_VERSION: ${API_VERSION:-v1}` to frontend env |
-| `.env.example` | 1 | Add `API_VERSION=v1` |
-| `frontend/src/app/app.ts` | 2 | Remove hardcoded `/api/v1` path segment |
-| `README.md` | 2, 3, 4 | Runtime config docs; .env.local removal; credentials table |
-| `keycloak/realm-export.json` | 4 | alice123 → password, bob123 → password |
-| `.claude/CLAUDE.md` | 4 | Update test users line |
+| File                                   | Task    | Change                                                     |
+| -------------------------------------- | ------- | ---------------------------------------------------------- |
+| `frontend/public/config.template.json` | 1       | Add `${API_VERSION}` to apiUrl                             |
+| `frontend/public/config.json`          | 1       | Update local default to include `/api/v1`                  |
+| `compose.yaml`                         | 1       | Add `API_VERSION: ${API_VERSION:-v1}` to frontend env      |
+| `.env.example`                         | 1       | Add `API_VERSION=v1`                                       |
+| `frontend/src/app/app.ts`              | 2       | Remove hardcoded `/api/v1` path segment                    |
+| `README.md`                            | 2, 3, 4 | Runtime config docs; .env.local removal; credentials table |
+| `keycloak/realm-export.json`           | 4       | alice123 → password, bob123 → password                     |
+| `.claude/CLAUDE.md`                    | 4       | Update test users line                                     |
 
 ---
 
@@ -252,11 +252,11 @@ All five services run in Docker. Uses `.env.local`.
 docker compose --env-file .env.local up --build
 ```
 
-| Service   | URL                           |
-| --------- | ----------------------------- |
-| Frontend  | http://localhost:4200         |
-| Backend   | http://localhost:8000         |
-| Keycloak  | http://localhost:8080         |
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:4200 |
+| Backend  | http://localhost:8000 |
+| Keycloak | http://localhost:8080 |
 
 **First-time setup:**
 
@@ -285,11 +285,11 @@ All five services run in Docker. No env file needed — `compose.yaml` defaults 
 docker compose up --build
 ```
 
-| Service   | URL                           |
-| --------- | ----------------------------- |
-| Frontend  | http://localhost:4200         |
-| Backend   | http://localhost:8000         |
-| Keycloak  | http://localhost:8080         |
+| Service  | URL                   |
+| -------- | --------------------- |
+| Frontend | http://localhost:4200 |
+| Backend  | http://localhost:8000 |
+| Keycloak | http://localhost:8080 |
 
 To also start pgadmin at `:5050`:
 
