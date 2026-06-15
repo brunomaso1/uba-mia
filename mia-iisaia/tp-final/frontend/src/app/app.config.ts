@@ -9,11 +9,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HttpClient, provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   authInterceptor,
+  OidcSecurityService,
   provideAuth,
   StsConfigHttpLoader,
   StsConfigLoader,
-  withAppInitializerAuthCheck,
 } from 'angular-auth-oidc-client';
+import { of, switchMap } from 'rxjs';
 import { map } from 'rxjs';
 
 import { routes } from './app.routes';
@@ -43,15 +44,24 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor()])),
     provideAppInitializer(() => inject(ConfigService).load()),
-    provideAuth(
-      {
-        loader: {
-          provide: StsConfigLoader,
-          useFactory: httpLoaderFactory,
-          deps: [HttpClient],
-        },
+    provideAuth({
+      loader: {
+        provide: StsConfigLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient],
       },
-      withAppInitializerAuthCheck(),
-    ),
+    }),
+    provideAppInitializer(() => {
+      const oidc = inject(OidcSecurityService);
+      return oidc.checkAuth().pipe(
+        switchMap(({ isAuthenticated }) => {
+          if (isAuthenticated) {
+            return of(void 0 as void);
+          }
+          oidc.authorize();
+          return oidc.stsCallback$.pipe(map(() => void 0 as void));
+        }),
+      );
+    }),
   ],
 };
