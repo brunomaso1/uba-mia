@@ -23,10 +23,6 @@ export class App {
     this.authenticated().isAuthenticated ? `${this.apiUrl()}/users/me` : undefined,
   );
 
-  login(): void {
-    this.oidc.authorize();
-  }
-
   logout(): void {
     this.oidc.logoff().subscribe();
   }
