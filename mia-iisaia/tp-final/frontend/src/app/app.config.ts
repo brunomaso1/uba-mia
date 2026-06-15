@@ -14,7 +14,7 @@ import {
   StsConfigHttpLoader,
   StsConfigLoader,
 } from 'angular-auth-oidc-client';
-import { map, of, switchMap } from 'rxjs';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 import { routes } from './app.routes';
 import { AppConfig, ConfigService } from './core/config.service';
@@ -60,6 +60,7 @@ export const appConfig: ApplicationConfig = {
           oidc.authorize();
           return oidc.stsCallback$.pipe(map(() => void 0 as void));
         }),
+        catchError(() => of(void 0 as void)),
       );
     }),
   ],
