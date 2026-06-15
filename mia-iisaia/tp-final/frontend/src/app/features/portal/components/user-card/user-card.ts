@@ -12,5 +12,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class UserCardComponent {
   readonly user = input<unknown>(undefined);
   readonly isLoading = input<boolean>(false);
-  readonly error = input<unknown>(undefined);
+  readonly error = input<Error | undefined>(undefined);
 }
