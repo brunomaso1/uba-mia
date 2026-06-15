@@ -39,12 +39,11 @@ describe('App — unauthenticated state', () => {
     expect(compiled.querySelector('h1')?.textContent).toContain('Runtime config check');
   });
 
-  it('does not render a login button', () => {
+  it('renders no buttons when unauthenticated', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const buttons = Array.from(compiled.querySelectorAll('button'));
-    expect(buttons.every((b) => !b.textContent?.includes('Login'))).toBe(true);
+    expect(compiled.querySelectorAll('button').length).toBe(0);
   });
 });
 
