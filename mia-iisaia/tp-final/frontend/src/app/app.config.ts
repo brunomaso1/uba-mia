@@ -14,8 +14,7 @@ import {
   StsConfigHttpLoader,
   StsConfigLoader,
 } from 'angular-auth-oidc-client';
-import { of, switchMap } from 'rxjs';
-import { map } from 'rxjs';
+import { map, of, switchMap } from 'rxjs';
 
 import { routes } from './app.routes';
 import { AppConfig, ConfigService } from './core/config.service';
