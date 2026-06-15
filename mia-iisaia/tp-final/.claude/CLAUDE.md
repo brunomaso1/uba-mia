@@ -86,7 +86,7 @@ docker compose exec -T db \
 ## Key Design Decisions
 
 - `User.keycloak_sub` stores the JWT `sub` claim. Users are auto-created in the DB on first authenticated request to `GET /users/me` — no separate registration flow.
-- Keycloak realm `expense-app` is imported automatically on container start from `keycloak/realm-export.json`. Test users: `alice / alice123` and `bob / bob123`.
+- Keycloak realm `expense-app` is imported automatically on container start from `keycloak/realm-export.json`. Test users: `alice / password` and `bob / password`.
 - DB schema is initialized from `db/init/01-init.sql` on first PostgreSQL container start (`app_db` service). Seeds in `db/seeds/` must be applied manually.
 - Keycloak uses its own dedicated PostgreSQL instance (`keycloak_db`, port 5433) separate from the app database (`app_db`, port 5432).
 - Image versions are parameterized via environment variables. Copy `.env.example` to `.env` to configure; key vars: `POSTGRES_VERSION`, `KEYCLOAK_VERSION`, `PYTHON_VERSION`, `UV_VERSION`, `NODE_VERSION`. No `env_file` directives in compose — variables are injected via shell environment or `.env` file at the project root.
