@@ -32,6 +32,8 @@ JWT → Angular HTTP interceptor → Authorization: Bearer <token> on all API re
 FastAPI → validates JWT signature locally via Keycloak JWKS endpoint (no roundtrip per request)
 ```
 
+**The app automatically redirects unauthenticated users to Keycloak on load.** There is no manual login button — if a user is not authenticated when the Angular app initializes, it calls `oidc.authorize()` and the browser navigates to Keycloak immediately. After a successful login, Keycloak redirects back to the app and the OIDC library completes the token exchange transparently.
+
 On the first successful authenticated request to `GET /users/me`, the user is automatically created in the application database using the `sub` claim from the JWT. No separate registration step is required.
 
 **Test credentials (dev only):**
