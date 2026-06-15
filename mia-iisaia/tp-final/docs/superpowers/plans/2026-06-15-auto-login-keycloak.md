@@ -205,6 +205,8 @@ git commit -m "feat: remove manual login button — auto-login handled by app in
 
 This is the core change. `checkAuth()` processes the OAuth callback URL (if the user is returning from Keycloak with `?code=...&state=...`) or restores an existing session. If neither applies, it returns `isAuthenticated: false` and we redirect immediately.
 
+The initializer returns an Observable (Angular's `APP_INITIALIZER` accepts both Observables and Promises). In the unauthenticated branch: `authorize()` triggers the browser redirect to Keycloak and `stsCallback$` is returned as the blocking observable — it never emits in this context because the page is already navigating away, which is the intended behavior. On the next boot (callback URL), `checkAuth()` returns `isAuthenticated: true` and the initializer completes via `of(void 0)`.
+
 **Files:**
 - Modify: `frontend/src/app/app.config.ts`
 
@@ -227,7 +229,7 @@ import {
   StsConfigHttpLoader,
   StsConfigLoader,
 } from 'angular-auth-oidc-client';
-import { firstValueFrom } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { map } from 'rxjs';
 
 import { routes } from './app.routes';
@@ -264,13 +266,17 @@ export const appConfig: ApplicationConfig = {
         deps: [HttpClient],
       },
     }),
-    provideAppInitializer(async () => {
+    provideAppInitializer(() => {
       const oidc = inject(OidcSecurityService);
-      const result = await firstValueFrom(oidc.checkAuth());
-      if (!result.isAuthenticated) {
-        oidc.authorize();
-        await new Promise<never>(() => {});
-      }
+      return oidc.checkAuth().pipe(
+        switchMap(({ isAuthenticated }) => {
+          if (isAuthenticated) {
+            return of(void 0 as void);
+          }
+          oidc.authorize();
+          return oidc.stsCallback$.pipe(map(() => void 0 as void));
+        }),
+      );
     }),
   ],
 };
@@ -279,8 +285,9 @@ export const appConfig: ApplicationConfig = {
 Key changes from the original:
 - `withAppInitializerAuthCheck` removed from the `angular-auth-oidc-client` import and from `provideAuth(...)`.
 - `OidcSecurityService` added to the `angular-auth-oidc-client` import.
-- `firstValueFrom` added from `rxjs`.
-- New `provideAppInitializer` block added after `provideAuth(...)`.
+- `of`, `switchMap` added from `rxjs`.
+- New Observable-based `provideAppInitializer` block added after `provideAuth(...)`.
+- Uses `stsCallback$` (library-native observable) instead of a never-resolving Promise to block initialization while the browser navigates to Keycloak.
 
 - [ ] **Step 2: Run tests — verify all still pass**
 
