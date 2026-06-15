@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://localhost:8000",
+  "apiUrl": "http://localhost:8000/api/v1",
   "auth": {
     "authority": "http://localhost:8080/realms/expense-app",
     "clientId": "expense-frontend",

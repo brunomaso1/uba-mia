@@ -1,8 +1,8 @@
 {
-  "apiUrl": "${API_URL}",
+  "apiUrl": "${API_URL}/api/${API_VERSION}",
   "auth": {
     "authority": "${KEYCLOAK_AUTHORITY}",
     "clientId": "${KEYCLOAK_CLIENT_ID}",
-    "scope": "${KEYCLOAK_SCOPE}"
+    "scope": "openid profile email"
   }
 }

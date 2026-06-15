@@ -20,7 +20,7 @@ export class App {
   protected readonly authenticated = this.oidc.authenticated;
 
   protected readonly me = httpResource(() =>
-    this.authenticated().isAuthenticated ? `${this.apiUrl()}/api/v1/users/me` : undefined,
+    this.authenticated().isAuthenticated ? `${this.apiUrl()}/users/me` : undefined,
   );
 
   login(): void {

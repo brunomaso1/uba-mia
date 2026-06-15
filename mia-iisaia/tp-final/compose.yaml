@@ -116,6 +116,7 @@ services:
     restart: unless-stopped
     environment:
       API_URL: ${API_URL:-http://localhost:8000}
+      API_VERSION: ${API_VERSION:-v1}
       KEYCLOAK_AUTHORITY: ${KEYCLOAK_AUTHORITY:-http://localhost:8080/realms/expense-app}
       KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-expense-frontend}
     ports:
