@@ -74,6 +74,22 @@ paths:
 - Use the HTTP interceptor to attach `Authorization: Bearer <token>` to all API requests.
 - The Keycloak issuer for dev is `http://localhost:8080/realms/expense-app`.
 
+## Runtime Configuration
+
+The app reads environment-specific values at **runtime** via `fetch('/config.json')` in `ConfigService` (`frontend/src/app/core/config.service.ts`), before Angular bootstraps. This allows a single Docker image to be reconfigured per environment without rebuilding.
+
+**Two files in `frontend/public/`:**
+- `config.json` — committed with local-dev defaults (used directly by `ng serve`; overwritten in Docker at container start).
+- `config.template.json` — template with `${VAR_NAME}` placeholders. `frontend/entrypoint.sh` runs `envsubst` over it at Docker startup and writes the result to `config.json`.
+
+`envsubst` variables are detected dynamically from the placeholders in `config.template.json`, so no manual whitelist is maintained.
+
+**To add a new runtime variable**, make all four of these changes:
+1. Add `"newKey": "${NEW_VAR}"` to `frontend/public/config.template.json`.
+2. Add `"newKey": "<local-default>"` to `frontend/public/config.json` (used by `ng serve`).
+3. Expose the value in `ConfigService` as a signal.
+4. Declare `NEW_VAR` in `compose.yaml` (under the `frontend` service environment) and add it to `.env.example`.
+
 
 
 
