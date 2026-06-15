@@ -330,24 +330,54 @@ docker compose --env-file .env.prod up --build -d
 
 ### Runtime Configuration (frontend `config.json`)
 
-The frontend reads environment-specific values (currently the backend `API_URL`) at **runtime**, not at build time. This lets a single built image be reconfigured per environment without rebuilding — the same pattern Kubernetes uses when it mounts a ConfigMap over a file in a running container.
+The frontend reads environment-specific values at **runtime**, not at build time. This lets a single built image be reconfigured per environment without rebuilding — the same pattern Kubernetes uses when it mounts a ConfigMap over a file in a running container.
 
 **How it works:** At startup, before the Angular app bootstraps, `ConfigService` (`frontend/src/app/core/config.service.ts`) does `fetch('/config.json')` and exposes the values as signals (e.g. `apiUrl()`). Every environment provides that `config.json` differently:
+
+**Quick mental model (for `entrypoint.sh`):**
+
+1. `envsubst` reads environment variables from the running container.
+2. It reads `config.template.json` and replaces the allowed placeholders (e.g. `${API_URL}`, `${AUTH_AUTHORITY}`).
+3. It writes the rendered output to `config.json` (overwriting it if it already exists).
+
+In short: **template + environment variables -> final `config.json` served by Nginx**.
 
 | Environment              | How `config.json` is provided                                                                 |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
 | **Local — Hybrid** (`ng serve`) | The committed `frontend/public/config.json` is served as-is (defaults to `http://localhost:8000`). |
-| **Local-Full / Dev / Prod** (Docker) | The container `entrypoint.sh` runs `envsubst` over `config.template.json`, producing `config.json` at startup from the `API_URL` env var. |
+| **Local-Full / Dev / Prod** (Docker) | The container `entrypoint.sh` runs `envsubst` over `config.template.json`, producing `config.json` at startup from environment variables. |
 | **Kubernetes** (target deployment) | A ConfigMap is mounted over `config.json` — no `envsubst` needed. *(Conceptual: no manifests live in this repo yet.)* |
 
 **The two files in `frontend/public/`:**
 
 - **`config.json`** — committed with the local-dev default (`http://localhost:8000`). Used directly by `ng serve`. In Docker it is **overwritten** at container start by the step below, so the committed value only matters for local hybrid development.
-- **`config.template.json`** — the template with `${API_URL}` placeholders. `frontend/entrypoint.sh` substitutes the env var into it via `envsubst` and writes the result to `config.json` before launching Nginx (`frontend/Dockerfile` sets it as the `ENTRYPOINT`).
+- **`config.template.json`** — the template with placeholders like `${VAR_NAME}`. `frontend/entrypoint.sh` substitutes env vars into it via `envsubst` and writes the result to `config.json` before launching Nginx (`frontend/Dockerfile` sets it as the `ENTRYPOINT`).
 
-**Setting it in Docker:** `compose.yaml` passes `API_URL: ${API_URL:-http://localhost:8000}` to the frontend service. Override it per environment in the corresponding env file (`.env.local`, `.env.dev`, `.env.prod`) — e.g. `API_URL=https://expense.yourdomain.com`.
+**Setting it in Docker:** `compose.yaml` passes runtime vars to the frontend service (for example `API_URL: ${API_URL:-http://localhost:8000}`). Override values per environment in the corresponding env file (`.env.local`, `.env.dev`, `.env.prod`) — e.g. `API_URL=https://expense.yourdomain.com`.
 
-> **Adding a new runtime variable:** `envsubst` is whitelisted to substitute **only `${API_URL}`** (see `entrypoint.sh`). To add another runtime value you must (1) add the key to `config.template.json`, (2) add the placeholder to the `envsubst` whitelist in `entrypoint.sh`, (3) read it in `ConfigService`, and (4) declare the env var in `compose.yaml` and `.env.example`.
+> **Adding a new runtime variable:** if `envsubst` is explicitly whitelisted in `frontend/entrypoint.sh`, adding a new runtime key requires updating both `frontend/public/config.template.json` and the whitelist in `frontend/entrypoint.sh`.
+>
+> If you want a **single source of change** (template only), use one of these approaches:
+> - remove the whitelist and run `envsubst` without an explicit variable list, or
+> - keep controlled substitution but build the variable list dynamically from placeholders found in `config.template.json`.
+>
+> In all cases, after adding the new key in `config.template.json`, the app still needs to consume it in `ConfigService`, and the variable must be declared in `compose.yaml` and `.env.example`.
+
+**Example: dynamic whitelist from template placeholders**
+
+```sh
+#!/bin/sh
+set -eu
+
+TEMPLATE=/usr/share/nginx/html/config.template.json
+OUTPUT=/usr/share/nginx/html/config.json
+
+# Build a whitelist like: ${API_URL} ${AUTH_AUTHORITY} ${AUTH_CLIENT_ID}
+VARS="$(grep -o '\${[A-Za-z_][A-Za-z0-9_]*}' "$TEMPLATE" | sort -u | tr '\n' ' ')"
+
+envsubst "$VARS" < "$TEMPLATE" > "$OUTPUT"
+exec "$@"
+```
 
 ---
 

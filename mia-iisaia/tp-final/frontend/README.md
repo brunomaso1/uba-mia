@@ -14,10 +14,10 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 ## Runtime configuration
 
-Environment-specific values (currently the backend `API_URL`) are loaded at **runtime**, not baked into the build. On startup, before bootstrap, `ConfigService` (`src/app/core/config.service.ts`) fetches `/config.json` and exposes the values as signals.
+Environment-specific values are loaded at **runtime**, not baked into the build. On startup, before bootstrap, `ConfigService` (`src/app/core/config.service.ts`) fetches `/config.json` and exposes the values as signals.
 
 - **`ng serve` / local dev:** the committed `public/config.json` is served directly (`apiUrl` defaults to `http://localhost:8000`). Edit it locally if your backend runs elsewhere.
-- **Docker / Kubernetes:** `config.json` is generated/overwritten at container start — `entrypoint.sh` runs `envsubst` over `public/config.template.json` using the `API_URL` env var (in K8s a ConfigMap would be mounted over the file instead).
+- **Docker / Kubernetes:** `config.json` is generated/overwritten at container start — `entrypoint.sh` runs `envsubst` over `public/config.template.json` using runtime env vars (in K8s a ConfigMap would be mounted over the file instead).
 
 See the root `README.md` → **Runtime Configuration** for the full per-environment breakdown and how to add a new runtime variable.
 
