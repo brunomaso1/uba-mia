@@ -1,0 +1,27 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button mat-icon-button (click)="goBack()" aria-label="Volver a grupos">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Miembros del grupo</h1>
+  </div>
+
+  @if (members.isLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="48" aria-label="Cargando miembros…" />
+    </div>
+  } @else if (members.error()) {
+    <p role="alert">No se pudieron cargar los miembros.</p>
+  } @else {
+    <mat-list>
+      @for (member of members.value() ?? []; track member.user_id) {
+        <mat-list-item>
+          <span matListItemTitle>{{ member.display_name }}</span>
+          <span matListItemLine>{{ member.email }}</span>
+        </mat-list-item>
+      } @empty {
+        <p>Este grupo no tiene miembros.</p>
+      }
+    </mat-list>
+  }
+</div>
