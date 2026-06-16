@@ -39,4 +39,18 @@ describe('AddMemberFormComponent', () => {
     fixture.componentRef.setInput('groupId', 'g-1');
     expect(fixture.componentInstance).toBeTruthy();
   });
+
+  it('shows all users as available when no members are loaded yet', () => {
+    const fixture = TestBed.createComponent(AddMemberFormComponent);
+    fixture.componentRef.setInput('groupId', 'g-1');
+    fixture.componentRef.setInput('allUsers', [
+      { id: 'u-1', display_name: 'Alice', email: 'alice@test.com' },
+      { id: 'u-2', display_name: 'Bob', email: 'bob@test.com' },
+    ]);
+    fixture.detectChanges();
+
+    // members.value() is undefined until the httpResource resolves → Set is empty → all pass filter
+    const component = fixture.componentInstance as any;
+    expect(component.availableUsers()).toHaveLength(2);
+  });
 });

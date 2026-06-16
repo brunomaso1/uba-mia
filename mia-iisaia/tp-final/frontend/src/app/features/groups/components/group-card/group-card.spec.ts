@@ -4,6 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 
 import { GroupCardComponent } from './group-card';
 import { GroupsService, Group } from '../../groups.service';
@@ -64,5 +65,22 @@ describe('GroupCardComponent', () => {
     fixture.componentRef.setInput('group', mockGroup);
     fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('2 miembros');
+  });
+
+  it('calls deleteGroup when delete button is clicked', () => {
+    const groupsService = TestBed.inject(GroupsService);
+    const deleteSpy = vi.spyOn(groupsService, 'deleteGroup');
+
+    const fixture = TestBed.createComponent(GroupCardComponent);
+    fixture.componentRef.setInput('group', mockGroup);
+    fixture.detectChanges();
+
+    const deleteBtn = (fixture.nativeElement as HTMLElement).querySelector(
+      'button[aria-label="Eliminar grupo"]',
+    ) as HTMLButtonElement;
+    deleteBtn.click();
+    fixture.detectChanges();
+
+    expect(deleteSpy).toHaveBeenCalledWith('g-1');
   });
 });
