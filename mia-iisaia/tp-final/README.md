@@ -51,6 +51,32 @@ Authenticated landing page. After Keycloak login, displays the current user's pr
 - `PortalPage` — main page; fetches the authenticated user via `httpResource`
 - `UserCardComponent` — displays user data in a Material card; shows a loading spinner and error state
 
+### Group Management (`/groups`, `/groups/:id`)
+
+Allows authenticated users to manage expense groups and their members.
+
+**Pages:**
+- `GroupsPage` — lists all groups the user belongs to; create new groups inline; each `GroupCardComponent` supports rename (edit-in-place), delete, and inline add-member
+- `GroupDetailPage` — lists all members of a group with their display name and email
+
+**Components:**
+- `GroupCardComponent` — card with name, member count, edit/delete/add-member/detail actions
+- `AddMemberFormComponent` — select from all app users, filtered to exclude existing members; lazy-fetches the group's current members when opened
+
+**Service:** `GroupsService` — mutation methods (create, rename, delete, add member)
+
+**API endpoints used:**
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/users` | All registered users (for add-member selector) |
+| GET | `/api/v1/groups` | Groups the current user belongs to |
+| POST | `/api/v1/groups` | Create group (creator auto-added as member) |
+| PATCH | `/api/v1/groups/:id` | Rename group |
+| DELETE | `/api/v1/groups/:id` | Delete group (cascades expenses) |
+| POST | `/api/v1/groups/:id/members` | Add a user to the group |
+| GET | `/api/v1/groups/:id/members` | List all members of the group |
+
 ---
 
 ## Architecture
