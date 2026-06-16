@@ -12,3 +12,11 @@ class UserRead(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class UserPublic(BaseModel):
+    id: uuid.UUID
+    display_name: str
+    email: str
+
+    model_config = {"from_attributes": True}
