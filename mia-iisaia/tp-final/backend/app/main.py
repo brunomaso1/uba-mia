@@ -5,11 +5,13 @@ from fastapi_keycloak_middleware import KeycloakConfiguration, setup_keycloak_mi
 from app.core.config import settings
 from app.deps import map_user
 from app.routers.categories import router as categories_router
+from app.routers.groups import router as groups_router
 from app.routers.users import router as users_router
 
 app = FastAPI(title="Expense API", version="0.1.0")
 
 app.include_router(categories_router, prefix=settings.api_prefix)
+app.include_router(groups_router, prefix=settings.api_prefix)
 app.include_router(users_router, prefix=settings.api_prefix)
 
 keycloak_config = KeycloakConfiguration(

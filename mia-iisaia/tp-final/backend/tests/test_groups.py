@@ -1,8 +1,12 @@
 import uuid
 
 import pytest
+from fastapi_keycloak_middleware import get_user
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.deps import get_db
+from app.main import app
 from app.services import group as group_service
 from app.services import user as user_service
 
@@ -119,3 +123,189 @@ async def test_list_members(db: AsyncSession):
 async def test_list_members_group_not_found(db: AsyncSession):
     result = await group_service.list_members(db, uuid.uuid4())
     assert result is None
+
+
+# ── Router tests ───────────────────────────────────────────────────────────────
+
+
+def _claims(sub: str, email: str, name: str) -> dict:
+    return {"sub": sub, "email": email, "name": name}
+
+
+@pytest.mark.asyncio
+async def test_get_groups_empty(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-1", "rt1@test.com", "RT One")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.get("/api/v1/groups")
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+@pytest.mark.asyncio
+async def test_post_group_creates_and_returns(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-2", "rt2@test.com", "RT Two")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.post("/api/v1/groups", json={"name": "Vacaciones"})
+    app.dependency_overrides.clear()
+    assert response.status_code == 201
+    data = response.json()
+    assert data["name"] == "Vacaciones"
+    assert data["member_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_patch_group_renames(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-3", "rt3@test.com", "RT Three")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        create_resp = await client.post("/api/v1/groups", json={"name": "Old"})
+        group_id = create_resp.json()["id"]
+        rename_resp = await client.patch(
+            f"/api/v1/groups/{group_id}", json={"name": "New"}
+        )
+    app.dependency_overrides.clear()
+    assert rename_resp.status_code == 200
+    assert rename_resp.json()["name"] == "New"
+    assert rename_resp.json()["member_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_patch_nonexistent_group_returns_404(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-4", "rt4@test.com", "RT Four")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.patch(
+            f"/api/v1/groups/{uuid.uuid4()}", json={"name": "X"}
+        )
+    app.dependency_overrides.clear()
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_delete_group_returns_204(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-5", "rt5@test.com", "RT Five")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        create_resp = await client.post("/api/v1/groups", json={"name": "Temp"})
+        group_id = create_resp.json()["id"]
+        delete_resp = await client.delete(f"/api/v1/groups/{group_id}")
+    app.dependency_overrides.clear()
+    assert delete_resp.status_code == 204
+
+
+@pytest.mark.asyncio
+async def test_delete_nonexistent_group_returns_404(db: AsyncSession):
+    async def override_user():
+        return _claims("sub-rt-6", "rt6@test.com", "RT Six")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.delete(f"/api/v1/groups/{uuid.uuid4()}")
+    app.dependency_overrides.clear()
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_post_member_adds_user(db: AsyncSession):
+    await _make_user(db, "sub-pm-a", "alice@pm.com", "Alice")
+    bob = await _make_user(db, "sub-pm-b", "bob@pm.com", "Bob")
+
+    async def override_user():
+        return _claims("sub-pm-a", "alice@pm.com", "Alice")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        create_resp = await client.post("/api/v1/groups", json={"name": "Team"})
+        group_id = create_resp.json()["id"]
+        add_resp = await client.post(
+            f"/api/v1/groups/{group_id}/members",
+            json={"user_id": str(bob.id)},
+        )
+    app.dependency_overrides.clear()
+    assert add_resp.status_code == 204
+
+
+@pytest.mark.asyncio
+async def test_get_members_returns_list(db: AsyncSession):
+    await _make_user(db, "sub-gm-a", "alice@gm.com", "Alice")
+    bob = await _make_user(db, "sub-gm-b", "bob@gm.com", "Bob")
+
+    async def override_user():
+        return _claims("sub-gm-a", "alice@gm.com", "Alice")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        create_resp = await client.post("/api/v1/groups", json={"name": "Team"})
+        group_id = create_resp.json()["id"]
+        await client.post(
+            f"/api/v1/groups/{group_id}/members",
+            json={"user_id": str(bob.id)},
+        )
+        members_resp = await client.get(f"/api/v1/groups/{group_id}/members")
+    app.dependency_overrides.clear()
+    assert members_resp.status_code == 200
+    members = members_resp.json()
+    assert len(members) == 2
+    emails = {m["email"] for m in members}
+    assert emails == {"alice@gm.com", "bob@gm.com"}
