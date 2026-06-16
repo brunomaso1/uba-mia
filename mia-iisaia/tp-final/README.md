@@ -43,6 +43,14 @@ On the first successful authenticated request to `GET /users/me`, the user is au
 | `alice`  | `password` | alice@example.com |
 | `bob`    | `password` | bob@example.com   |
 
+### Portal (`/`)
+
+Authenticated landing page. After Keycloak login, displays the current user's profile data fetched from `GET /users/me`. Provides a Logout button.
+
+**Components:**
+- `PortalPage` — main page; fetches the authenticated user via `httpResource`
+- `UserCardComponent` — displays user data in a Material card; shows a loading spinner and error state
+
 ---
 
 ## Architecture
@@ -174,7 +182,18 @@ erDiagram
 
 ### Frontend (`/frontend`)
 
-> _Structure to be documented as features are implemented._
+```
+frontend/src/app/
+├── core/           # App-wide infrastructure (ConfigService, auth plumbing)
+├── shared/         # Reusable components, pipes, directives
+└── features/
+    └── <feature>/
+        ├── components/          # Standalone UI components (each in own subfolder)
+        ├── pages/               # Page components (compose feature components)
+        └── <feature>.routes.ts  # Lazy-loaded route config
+```
+
+Single-file artifacts (one service, one model, one pipe) live at the feature root — no subfolder until a second file of the same type is added.
 
 ---
 

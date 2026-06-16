@@ -90,6 +90,25 @@ The app reads environment-specific values at **runtime** via `fetch('/config.jso
 3. Expose the value in `ConfigService` as a signal.
 4. Declare `NEW_VAR` in `compose.yaml` (under the `frontend` service environment) and add it to `.env.example`.
 
+## Folder Structure
+
+The app is organized by feature under `src/app/`:
+
+```
+src/app/
+├── core/       # App-wide infrastructure (ConfigService, auth plumbing)
+├── shared/     # Reusable components, pipes, directives across features
+└── features/
+    └── <feature>/
+        ├── components/          # Each component in its own subfolder (ts + html + scss + spec)
+        ├── pages/               # Page components that compose feature components
+        └── <feature>.routes.ts  # Lazy-loaded route config for this feature
+```
+
+**Structural rules:**
+- Components always get a subfolder — a component's `.ts`, `.html`, `.scss`, and `.spec.ts` live together under `components/<name>/`.
+- Single-file artifacts (one service, one model, one pipe) live directly at the feature root — no subfolder until a second file of that type is added.
+- `shared/` fills as cross-feature needs emerge; nothing is pre-emptively placed there.
 
 
 
