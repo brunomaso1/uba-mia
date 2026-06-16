@@ -309,3 +309,26 @@ async def test_get_members_returns_list(db: AsyncSession):
     assert len(members) == 2
     emails = {m["email"] for m in members}
     assert emails == {"alice@gm.com", "bob@gm.com"}
+
+
+@pytest.mark.asyncio
+async def test_patch_group_by_non_member_returns_403(db: AsyncSession):
+    alice = await _make_user(db, "sub-403-a", "alice@403.com", "Alice")
+    group = await group_service.create(db, "Alice Group", alice.id)
+
+    async def override_user():
+        return _claims("sub-403-b", "bob@403.com", "Bob Non-Member")
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.patch(
+            f"/api/v1/groups/{group.id}", json={"name": "Hacked"}
+        )
+    app.dependency_overrides.clear()
+    assert response.status_code == 403

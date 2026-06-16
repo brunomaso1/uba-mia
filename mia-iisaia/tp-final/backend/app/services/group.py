@@ -8,6 +8,21 @@ from app.models.group_member import GroupMember
 from app.models.user import User
 
 
+async def get(db: AsyncSession, group_id: uuid.UUID) -> Group | None:
+    result = await db.execute(select(Group).where(Group.id == group_id))
+    return result.scalar_one_or_none()
+
+
+async def is_member(db: AsyncSession, group_id: uuid.UUID, user_id: uuid.UUID) -> bool:
+    result = await db.execute(
+        select(GroupMember).where(
+            GroupMember.group_id == group_id,
+            GroupMember.user_id == user_id,
+        )
+    )
+    return result.scalar_one_or_none() is not None
+
+
 async def get_member_count(db: AsyncSession, group_id: uuid.UUID) -> int:
     result = await db.execute(
         select(func.count()).where(GroupMember.group_id == group_id)

@@ -58,11 +58,15 @@ async def rename_group(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    group = await group_service.rename(db, group_id, body.name)
-    if group is None:
+    if not await group_service.get(db, group_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Group not found"
         )
+    if not await group_service.is_member(db, group_id, current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group"
+        )
+    group = await group_service.rename(db, group_id, body.name)
     member_count = await group_service.get_member_count(db, group_id)
     return GroupRead(
         id=group.id,
@@ -79,11 +83,15 @@ async def delete_group(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    deleted = await group_service.delete(db, group_id)
-    if not deleted:
+    if not await group_service.get(db, group_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Group not found"
         )
+    if not await group_service.is_member(db, group_id, current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group"
+        )
+    await group_service.delete(db, group_id)
 
 
 @router.post("/{group_id}/members", status_code=status.HTTP_204_NO_CONTENT)
@@ -93,11 +101,18 @@ async def add_member(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    if not await group_service.get(db, group_id):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Group not found"
+        )
+    if not await group_service.is_member(db, group_id, current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group"
+        )
     ok = await group_service.add_member(db, group_id, body.user_id)
     if not ok:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Group or user not found",
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
 
 
@@ -107,11 +122,15 @@ async def list_members(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    rows = await group_service.list_members(db, group_id)
-    if rows is None:
+    if not await group_service.get(db, group_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Group not found"
         )
+    if not await group_service.is_member(db, group_id, current_user.id):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not a member of this group"
+        )
+    rows = await group_service.list_members(db, group_id)
     return [
         MemberRead(
             user_id=row.User.id,
