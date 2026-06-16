@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { httpResource } from '@angular/common/http';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { MatButtonModule } from '@angular/material/button';
 import { ConfigService } from '../../../../core/config.service';
 import { UserCardComponent } from '../../components/user-card/user-card';
 
 @Component({
   selector: 'app-portal-page',
-  imports: [MatButtonModule, UserCardComponent],
+  imports: [UserCardComponent],
   templateUrl: './portal-page.html',
   styleUrl: './portal-page.scss',
 })
@@ -20,8 +19,4 @@ export class PortalPage {
   protected readonly me = httpResource<unknown>(() =>
     this.authenticated().isAuthenticated ? `${this.config.apiUrl()}/users/me` : undefined,
   );
-
-  protected logout(): void {
-    this.oidc.logoff().subscribe();
-  }
 }

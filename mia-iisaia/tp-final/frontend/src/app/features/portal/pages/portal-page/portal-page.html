@@ -1,6 +1,5 @@
 <main>
   @if (authenticated().isAuthenticated) {
     <app-user-card [user]="me.value()" [isLoading]="me.isLoading()" [error]="me.error()" />
-    <button mat-button type="button" (click)="logout()">Logout</button>
   }
 </main>

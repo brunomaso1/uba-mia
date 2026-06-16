@@ -1,4 +1,3 @@
-import { of } from 'rxjs';
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient, withFetch } from '@angular/common/http';
@@ -12,7 +11,6 @@ const unauthenticatedOidc = {
 
 const authenticatedOidc = {
   authenticated: signal({ isAuthenticated: true }),
-  logoff: () => of(null),
 };
 
 describe('PortalPage — unauthenticated', () => {
@@ -32,11 +30,10 @@ describe('PortalPage — unauthenticated', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('renders no logout button when unauthenticated', () => {
+  it('renders no user card when unauthenticated', () => {
     const fixture = TestBed.createComponent(PortalPage);
     fixture.detectChanges();
-    const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button'));
-    expect(buttons.some((b) => b.textContent?.trim() === 'Logout')).toBe(false);
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-user-card')).toBeNull();
   });
 });
 
@@ -52,10 +49,9 @@ describe('PortalPage — authenticated', () => {
     }).compileComponents();
   });
 
-  it('shows a logout button when authenticated', () => {
+  it('renders user card when authenticated', () => {
     const fixture = TestBed.createComponent(PortalPage);
     fixture.detectChanges();
-    const buttons = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('button'));
-    expect(buttons.some((b) => b.textContent?.trim() === 'Logout')).toBe(true);
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-user-card')).toBeTruthy();
   });
 });
