@@ -14,7 +14,7 @@ import {
   StsConfigHttpLoader,
   StsConfigLoader,
 } from 'angular-auth-oidc-client';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 import { routes } from './app.routes';
 import { AppConfig, ConfigService } from './core/config.service';
@@ -50,18 +50,28 @@ export const appConfig: ApplicationConfig = {
         deps: [HttpClient],
       },
     }),
-    provideAppInitializer(() => {
+    provideAppInitializer(async () => {
       const oidc = inject(OidcSecurityService);
-      return oidc.checkAuth().pipe(
-        switchMap(({ isAuthenticated }) => {
-          if (isAuthenticated) {
-            return of(void 0 as void);
-          }
+      const http = inject(HttpClient);
+      const config = inject(ConfigService);
+      // Other initializers run concurrently, so apiUrl() isn't guaranteed to be
+      // set yet — load() is idempotent, so this just guarantees it's ready.
+      await config.load();
+
+      const ensureUserCreated = () => firstValueFrom(http.get(`${config.apiUrl()}/users/me`));
+
+      try {
+        const { isAuthenticated } = await firstValueFrom(oidc.checkAuth());
+        if (isAuthenticated) {
+          await ensureUserCreated();
+        } else {
           oidc.authorize();
-          return oidc.stsCallback$.pipe(map(() => void 0 as void));
-        }),
-        catchError(() => of(void 0 as void)),
-      );
+          await firstValueFrom(oidc.stsCallback$);
+          await ensureUserCreated();
+        }
+      } catch {
+        // Auth/user-creation failures shouldn't block app bootstrap.
+      }
     }),
   ],
 };
