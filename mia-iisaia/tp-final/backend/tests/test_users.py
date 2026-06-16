@@ -68,3 +68,38 @@ async def test_users_me_creates_and_returns_user(db: AsyncSession):
     # The user was persisted.
     result = await db.execute(select(User).where(User.keycloak_sub == "kc-sub-me"))
     assert result.scalar_one_or_none() is not None
+
+
+@pytest.mark.asyncio
+async def test_list_users_returns_all(db: AsyncSession):
+    from app.services import user as user_service
+
+    await user_service.get_or_create(db, "sub-lu-1", "u1@lu.com", "User One")
+    await user_service.get_or_create(db, "sub-lu-2", "u2@lu.com", "User Two")
+
+    claims = {"sub": "sub-lu-req", "email": "req@lu.com", "name": "Requester"}
+
+    async def override_user():
+        return claims
+
+    async def override_db():
+        yield db
+
+    app.dependency_overrides[get_user] = override_user
+    app.dependency_overrides[get_db] = override_db
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.get("/api/v1/users")
+    app.dependency_overrides.clear()
+
+    assert response.status_code == 200
+    data = response.json()
+    emails = [u["email"] for u in data]
+    assert "u1@lu.com" in emails
+    assert "u2@lu.com" in emails
+    for u in data:
+        assert "id" in u
+        assert "display_name" in u
+        assert "email" in u
+        assert "keycloak_sub" not in u  # UserPublic hides internal fields
