@@ -1,0 +1,73 @@
+<mat-card>
+  <mat-card-header>
+    @if (isEditing()) {
+      <input
+        class="edit-input"
+        [value]="editName()"
+        (input)="editName.set($any($event.target).value)"
+        (keydown.enter)="confirmRename()"
+        (keydown.escape)="cancelEdit()"
+        aria-label="Nombre del grupo"
+        autofocus
+      />
+      <button
+        mat-icon-button
+        (click)="confirmRename()"
+        [disabled]="isSaving()"
+        aria-label="Confirmar nombre"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+      <button mat-icon-button (click)="cancelEdit()" aria-label="Cancelar edición">
+        <mat-icon>close</mat-icon>
+      </button>
+    } @else {
+      <mat-card-title>{{ group().name }}</mat-card-title>
+    }
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="member-count">
+      {{ group().member_count }}
+      {{ group().member_count === 1 ? 'miembro' : 'miembros' }}
+    </p>
+
+    @if (showAddMember()) {
+      <app-add-member-form
+        [groupId]="group().id"
+        [allUsers]="allUsers()"
+        (memberAdded)="onMemberAdded()"
+      />
+    }
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button
+      mat-icon-button
+      (click)="startEdit()"
+      [disabled]="isEditing() || isSaving()"
+      aria-label="Renombrar grupo"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button (click)="goToDetail()" aria-label="Ver miembros">
+      <mat-icon>people</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      (click)="showAddMember.set(!showAddMember())"
+      aria-label="Agregar miembro"
+    >
+      <mat-icon>person_add</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      (click)="onDelete()"
+      [disabled]="isSaving()"
+      aria-label="Eliminar grupo"
+      color="warn"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>
