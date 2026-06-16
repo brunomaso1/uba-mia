@@ -250,7 +250,7 @@ Infrastructure (databases + Keycloak) runs in Docker. Backend and frontend run a
 
 ```bash
 # 1. Start only infrastructure
-docker compose up app_db keycloak_db keycloak
+docker compose --profile infra up
 
 # 2a. Backend (separate terminal)
 cd backend
@@ -282,7 +282,7 @@ All five services run in Docker. No env file needed — compose.yaml defaults co
 **Prerequisites:** Docker
 
 ```bash
-docker compose up --build
+docker compose --profile all up --build
 ```
 
 | Service  | URL                   |
@@ -295,7 +295,7 @@ docker compose up --build
 To also start pgadmin at `:5050`:
 
 ```bash
-docker compose --env-file .env.local -f compose.yaml -f compose.dev.yaml up --build
+docker compose --profile all --env-file .env.local -f compose.yaml -f compose.dev.yaml up --build
 ```
 
 ---
@@ -313,7 +313,7 @@ All services run in Docker on a shared development VM. Uses `.env.dev`.
 cp .env.example .env.dev
 # Edit .env.dev: replace every <VM_HOSTNAME> placeholder
 
-docker compose --env-file .env.dev up --build -d
+docker compose --profile all --env-file .env.dev up --build -d
 ```
 
 | Service  | URL                         |
@@ -345,7 +345,7 @@ All services run in Docker on the production host. Uses `.env.prod`.
 cp .env.example .env.prod
 # Edit .env.prod: set the real domain and strong passwords
 
-docker compose --env-file .env.prod up --build -d
+docker compose --profile all --env-file .env.prod up --build -d
 ```
 
 | Service  | URL                                         |
@@ -474,13 +474,16 @@ Frequently used commands that are easy to forget.
 
 ```bash
 # Start all services (rebuild images)
-docker compose up --build
+docker compose --profile all up --build
 
 # Start in background
-docker compose up -d
+docker compose --profile all up -d
+
+# Start only infrastructure
+docker compose --profile infra up
 
 # Start with a specific env file (dev/prod environments)
-docker compose --env-file .env.dev up --build
+docker compose --profile all --env-file .env.dev up --build
 
 # Stop all services and remove containers
 docker compose down
