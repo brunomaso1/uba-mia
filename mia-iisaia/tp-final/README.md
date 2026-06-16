@@ -185,7 +185,7 @@ erDiagram
 ```
 frontend/src/app/
 ├── core/           # App-wide infrastructure (ConfigService, auth plumbing)
-├── shared/         # Reusable components, pipes, directives
+├── shared/         # Reusable components, pipes, directives (empty — filled as cross-feature needs emerge)
 └── features/
     └── <feature>/
         ├── components/          # Standalone UI components (each in own subfolder)

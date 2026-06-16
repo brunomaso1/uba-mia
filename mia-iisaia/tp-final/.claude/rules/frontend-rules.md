@@ -106,7 +106,7 @@ src/app/
 ```
 
 **Structural rules:**
-- Components always get a subfolder — a component's `.ts`, `.html`, `.scss`, and `.spec.ts` live together under `components/<name>/`.
+- Components and pages always get a subfolder — a component's `.ts`, `.html`, `.scss`, and `.spec.ts` live together under `components/<name>/`; page components follow the same pattern under `pages/<name>/`.
 - Single-file artifacts (one service, one model, one pipe) live directly at the feature root — no subfolder until a second file of that type is added.
 - `shared/` fills as cross-feature needs emerge; nothing is pre-emptively placed there.
 
