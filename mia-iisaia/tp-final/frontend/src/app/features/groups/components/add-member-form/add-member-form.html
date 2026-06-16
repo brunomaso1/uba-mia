@@ -1,0 +1,29 @@
+<div class="add-member-form">
+  @if (members.isLoading()) {
+    <mat-spinner diameter="24" aria-label="Cargando miembros actuales…" />
+  } @else {
+    <mat-form-field appearance="outline" class="user-select">
+      <mat-label>Seleccionar usuario</mat-label>
+      <mat-select
+        [value]="selectedUserId()"
+        (selectionChange)="selectedUserId.set($event.value)"
+        aria-label="Usuario a agregar"
+      >
+        @for (user of availableUsers(); track user.id) {
+          <mat-option [value]="user.id"> {{ user.display_name }} ({{ user.email }}) </mat-option>
+        } @empty {
+          <mat-option disabled>Todos los usuarios ya son miembros</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!selectedUserId() || isSubmitting()"
+    >
+      Agregar
+    </button>
+  }
+</div>
