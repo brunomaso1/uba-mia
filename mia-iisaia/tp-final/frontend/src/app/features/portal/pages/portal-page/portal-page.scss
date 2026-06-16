@@ -1,0 +1,13 @@
+.portal-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  min-width: 260px;
+  flex: 1;
+}

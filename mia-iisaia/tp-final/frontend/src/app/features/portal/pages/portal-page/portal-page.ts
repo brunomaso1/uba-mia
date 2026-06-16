@@ -1,22 +1,13 @@
-import { Component, inject } from '@angular/core';
-import { httpResource } from '@angular/common/http';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { ConfigService } from '../../../../core/config.service';
-import { UserCardComponent } from '../../components/user-card/user-card';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portal-page',
-  imports: [UserCardComponent],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule],
   templateUrl: './portal-page.html',
   styleUrl: './portal-page.scss',
 })
-export class PortalPage {
-  private readonly config = inject(ConfigService);
-  private readonly oidc = inject(OidcSecurityService);
-
-  protected readonly authenticated = this.oidc.authenticated;
-
-  protected readonly me = httpResource<unknown>(() =>
-    this.authenticated().isAuthenticated ? `${this.config.apiUrl()}/users/me` : undefined,
-  );
-}
+export class PortalPage {}

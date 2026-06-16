@@ -1,5 +1,12 @@
-<main>
-  @if (authenticated().isAuthenticated) {
-    <app-user-card [user]="me.value()" [isLoading]="me.isLoading()" [error]="me.error()" />
-  }
+<main class="portal-container">
+  <mat-card class="feature-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>group</mat-icon>
+      <mat-card-title>Mis Grupos</mat-card-title>
+      <mat-card-subtitle> Gestiona tus grupos de gastos compartidos </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <a mat-flat-button color="primary" routerLink="/groups"> Ir a grupos </a>
+    </mat-card-actions>
+  </mat-card>
 </main>

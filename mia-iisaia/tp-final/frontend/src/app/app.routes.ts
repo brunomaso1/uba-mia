@@ -9,6 +9,10 @@ export const routes: Routes = [
         path: '',
         loadChildren: () => import('./features/portal/portal.routes').then((m) => m.portalRoutes),
       },
+      {
+        path: 'groups',
+        loadChildren: () => import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
+      },
     ],
   },
 ];

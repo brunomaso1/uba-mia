@@ -52,7 +52,10 @@ export class AppHeaderComponent {
     return name ? name[0].toUpperCase() : '?';
   });
 
-  protected readonly navItems = [{ label: 'Portal', path: '/' }];
+  protected readonly navItems = [
+    { label: 'Portal', path: '/' },
+    { label: 'Grupos', path: '/groups' },
+  ];
 
   protected logout(): void {
     this.oidc.logoff().subscribe();
