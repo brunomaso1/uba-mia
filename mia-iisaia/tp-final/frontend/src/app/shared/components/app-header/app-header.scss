@@ -1,0 +1,33 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.avatar-btn .avatar-initial {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.user-menu-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: default;
+
+  .user-menu-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .user-menu-email {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}

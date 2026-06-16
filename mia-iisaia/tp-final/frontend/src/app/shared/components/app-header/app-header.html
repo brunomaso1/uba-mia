@@ -1,0 +1,36 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button [matMenuTriggerFor]="navMenu" aria-label="Abrir menú de navegación">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="page-title">{{ pageTitle() }}</span>
+
+  <span class="spacer"></span>
+
+  <button
+    mat-icon-button
+    [matMenuTriggerFor]="userMenu"
+    [attr.aria-label]="'Cuenta de ' + username()"
+    class="avatar-btn"
+  >
+    <span class="avatar-initial">{{ initial() }}</span>
+  </button>
+</mat-toolbar>
+
+<mat-menu #navMenu="matMenu">
+  @for (item of navItems; track item.path) {
+    <a mat-menu-item [routerLink]="item.path">{{ item.label }}</a>
+  }
+</mat-menu>
+
+<mat-menu #userMenu="matMenu">
+  <div class="user-menu-header" (click)="$event.stopPropagation()">
+    <span class="user-menu-name">{{ username() }}</span>
+    <span class="user-menu-email">{{ email() }}</span>
+  </div>
+  <mat-divider />
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Cerrar sesión
+  </button>
+</mat-menu>
