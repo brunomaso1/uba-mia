@@ -6,5 +6,6 @@ import { AppHeaderComponent } from '../app-header/app-header';
   selector: 'app-shell',
   imports: [RouterOutlet, AppHeaderComponent],
   templateUrl: './app-shell.html',
+  styleUrl: './app-shell.scss',
 })
 export class AppShell {}
