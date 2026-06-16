@@ -1,0 +1,55 @@
+<div class="groups-container">
+  <div class="groups-header">
+    <h1>Mis Grupos</h1>
+    <button mat-flat-button color="primary" (click)="showCreateForm.set(!showCreateForm())">
+      <mat-icon>add</mat-icon>
+      Nuevo grupo
+    </button>
+  </div>
+
+  @if (showCreateForm()) {
+    <div class="create-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre del grupo</mat-label>
+        <input
+          matInput
+          [value]="newGroupName()"
+          (input)="newGroupName.set($any($event.target).value)"
+          (keydown.enter)="createGroup()"
+          placeholder="Ej: Vacaciones 2026"
+        />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="createGroup()"
+        [disabled]="isCreating() || !newGroupName().trim()"
+      >
+        Crear
+      </button>
+      <button mat-button (click)="showCreateForm.set(false)">Cancelar</button>
+    </div>
+  }
+
+  @if (groups.isLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="48" aria-label="Cargando grupos…" />
+    </div>
+  } @else if (groups.error()) {
+    <p role="alert">No se pudieron cargar los grupos.</p>
+  } @else {
+    <div class="groups-grid">
+      @for (group of groups.value() ?? []; track group.id) {
+        <app-group-card
+          [group]="group"
+          [allUsers]="allUsers.value() ?? []"
+          (deleted)="onGroupMutated()"
+          (renamed)="onGroupMutated()"
+          (memberAdded)="onGroupMutated()"
+        />
+      } @empty {
+        <p class="empty-state">No perteneces a ningún grupo todavía. ¡Crea el primero!</p>
+      }
+    </div>
+  }
+</div>
