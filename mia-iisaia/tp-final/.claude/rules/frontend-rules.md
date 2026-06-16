@@ -51,7 +51,7 @@ paths:
 ## State Management
 - Use signals for local component state
 - Use `computed()` for derived state
-- Use `resource()` (stable in v22) for async data fetching; it integrates with signals and manages loading/error states automatically.
+- Use `resource()` for async data fetching; use `httpResource()` for HTTP URL-based fetching (both stable in v22). Both integrate with signals and manage loading/error states automatically.
 - Keep state transformations pure and predictable
 - Do NOT use `mutate` on signals, use `update` or `set` instead
 
