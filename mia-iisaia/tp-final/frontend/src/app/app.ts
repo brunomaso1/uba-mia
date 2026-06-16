@@ -1,29 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
-import { httpResource } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
-
-import { ConfigService } from './core/config.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, JsonPipe],
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
+  imports: [RouterOutlet],
+  template: '<router-outlet />',
 })
-export class App {
-  private readonly config = inject(ConfigService);
-  private readonly oidc = inject(OidcSecurityService);
-
-  protected readonly apiUrl = this.config.apiUrl;
-  protected readonly authenticated = this.oidc.authenticated;
-
-  protected readonly me = httpResource(() =>
-    this.authenticated().isAuthenticated ? `${this.apiUrl()}/users/me` : undefined,
-  );
-
-  protected logout(): void {
-    this.oidc.logoff().subscribe();
-  }
-}
+export class App {}
