@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button [matMenuTriggerFor]="navMenu" aria-label="Abrir menú de navegación">
+  <button matIconButton [matMenuTriggerFor]="navMenu" aria-label="Abrir menú de navegación">
     <mat-icon>menu</mat-icon>
   </button>
 
@@ -8,7 +8,7 @@
   <span class="spacer"></span>
 
   <button
-    mat-icon-button
+    matIconButton
     [matMenuTriggerFor]="userMenu"
     [attr.aria-label]="'Cuenta de ' + username()"
     class="avatar-btn"
