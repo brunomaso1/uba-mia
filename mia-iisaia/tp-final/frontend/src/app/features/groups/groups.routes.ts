@@ -12,4 +12,12 @@ export const groupsRoutes: Routes = [
     loadComponent: () =>
       import('./pages/group-detail-page/group-detail-page').then((m) => m.GroupDetailPage),
   },
+  {
+    path: ':id/expenses',
+    title: 'Gastos del Grupo',
+    loadComponent: () =>
+      import('../expenses/pages/group-expenses-page/group-expenses-page').then(
+        (m) => m.GroupExpensesPage,
+      ),
+  },
 ];

@@ -1,0 +1,28 @@
+.expenses-container {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.expenses-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.add-expense-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}

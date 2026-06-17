@@ -1,0 +1,37 @@
+<div class="expenses-container">
+  <div class="expenses-header">
+    <button mat-icon-button (click)="goBack()" aria-label="Volver a grupos">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Gastos del grupo</h1>
+  </div>
+
+  @if (expenses.isLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="48" aria-label="Cargando gastos…" />
+    </div>
+  } @else if (expenses.error()) {
+    <p role="alert">No se pudieron cargar los gastos.</p>
+  } @else {
+    <mat-list>
+      @for (expense of expenses.value() ?? []; track expense.id) {
+        <mat-list-item>
+          <span matListItemTitle>{{ expense.description || 'Sin descripción' }}</span>
+          <span matListItemLine>{{ expense.date }} — ${{ expense.amount }}</span>
+        </mat-list-item>
+      } @empty {
+        <p>Este grupo no tiene gastos todavía.</p>
+      }
+    </mat-list>
+  }
+
+  <button
+    mat-fab
+    color="primary"
+    class="add-expense-fab"
+    (click)="openAddExpenseDialog()"
+    aria-label="Agregar gasto"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
