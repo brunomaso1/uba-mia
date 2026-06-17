@@ -76,6 +76,10 @@ export class GroupCardComponent {
     this.router.navigate(['/groups', this.group().id]);
   }
 
+  protected goToExpenses(): void {
+    this.router.navigate(['/groups', this.group().id, 'expenses']);
+  }
+
   protected onMemberAdded(): void {
     this.showAddMember.set(false);
     this.memberAdded.emit();

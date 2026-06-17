@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { Router } from '@angular/router';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
@@ -82,5 +83,21 @@ describe('GroupCardComponent', () => {
     fixture.detectChanges();
 
     expect(deleteSpy).toHaveBeenCalledWith('g-1');
+  });
+
+  it('navigates to the group expenses page when "Ver gastos" is clicked', () => {
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+
+    const fixture = TestBed.createComponent(GroupCardComponent);
+    fixture.componentRef.setInput('group', mockGroup);
+    fixture.detectChanges();
+
+    const expensesBtn = (fixture.nativeElement as HTMLElement).querySelector(
+      'button[aria-label="Ver gastos"]',
+    ) as HTMLButtonElement;
+    expensesBtn.click();
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/groups', 'g-1', 'expenses']);
   });
 });
