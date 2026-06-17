@@ -54,6 +54,7 @@ describe('ExpenseFormDialogComponent', () => {
     const { fixture, httpMock } = setup(null);
     const today = new Date().toISOString().slice(0, 10);
     expect((fixture.componentInstance as any).date()).toBe(today);
+    fixture.detectChanges();
     httpMock.expectOne('http://localhost:8000/api/v1/groups').flush(mockGroups);
   });
 

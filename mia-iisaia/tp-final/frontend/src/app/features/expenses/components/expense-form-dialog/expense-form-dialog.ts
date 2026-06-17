@@ -1,6 +1,6 @@
 // frontend/src/app/features/expenses/components/expense-form-dialog/expense-form-dialog.ts
 import { Component, effect, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { httpResource } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,14 +27,14 @@ function todayIsoDate(): string {
 })
 export class ExpenseFormDialogComponent {
   private readonly config = inject(ConfigService);
-  private readonly http = inject(HttpClient);
   private readonly expensesService = inject(ExpensesService);
   private readonly dialogRef = inject(
     MatDialogRef<ExpenseFormDialogComponent, Expense | undefined>,
   );
   private readonly data = inject<ExpenseFormDialogData | null>(MAT_DIALOG_DATA, { optional: true });
 
-  protected readonly groups = signal<Group[]>([]);
+  protected readonly groups = httpResource<Group[]>(() => `${this.config.apiUrl()}/groups`);
+
   protected readonly description = signal('');
   protected readonly amount = signal<number | null>(null);
   protected readonly date = signal(todayIsoDate());
@@ -43,11 +43,9 @@ export class ExpenseFormDialogComponent {
   protected readonly errorMessage = signal<string | null>(null);
 
   constructor() {
-    this.http.get<Group[]>(`${this.config.apiUrl()}/groups`).subscribe((g) => this.groups.set(g));
-
     effect(() => {
-      const groups = this.groups();
-      if (groups.length === 0 || this.selectedGroupId()) return;
+      const groups = this.groups.value();
+      if (!groups || groups.length === 0 || this.selectedGroupId()) return;
       const preselected = this.data?.preselectedGroupId;
       const match = preselected && groups.some((g) => g.id === preselected);
       this.selectedGroupId.set(match ? (preselected as string) : groups[0].id);

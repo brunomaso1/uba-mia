@@ -31,7 +31,7 @@
       (selectionChange)="selectedGroupId.set($event.value)"
       aria-label="Grupo del gasto"
     >
-      @for (group of groups(); track group.id) {
+      @for (group of groups.value() ?? []; track group.id) {
         <mat-option [value]="group.id">{{ group.name }}</mat-option>
       }
     </mat-select>
