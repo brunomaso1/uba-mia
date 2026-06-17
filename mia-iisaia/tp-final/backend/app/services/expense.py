@@ -3,20 +3,25 @@ from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.category import Category
 from app.models.expense import Expense
 
 
-async def _get_or_create_default_category_id(db: AsyncSession) -> uuid.UUID:
+async def _select_default_category_id(db: AsyncSession) -> uuid.UUID | None:
     result = await db.execute(
         select(Category.id)
         .where(Category.is_active == True)  # noqa: E712
         .order_by(Category.created_at.asc())
         .limit(1)
     )
-    category_id = result.scalar_one_or_none()
+    return result.scalar_one_or_none()
+
+
+async def _get_or_create_default_category_id(db: AsyncSession) -> uuid.UUID:
+    category_id = await _select_default_category_id(db)
     if category_id is not None:
         return category_id
 
@@ -25,7 +30,15 @@ async def _get_or_create_default_category_id(db: AsyncSession) -> uuid.UUID:
         description="Categoría por defecto para expenses sin clasificar",
     )
     db.add(category)
-    await db.flush()
+    try:
+        await db.flush()
+    except IntegrityError:
+        # Another concurrent request already created the default category.
+        await db.rollback()
+        category_id = await _select_default_category_id(db)
+        if category_id is not None:
+            return category_id
+        raise
     return category.id
 
 
