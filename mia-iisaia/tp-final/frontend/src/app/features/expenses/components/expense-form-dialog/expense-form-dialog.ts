@@ -56,7 +56,14 @@ export class ExpenseFormDialogComponent {
     const groupId = this.selectedGroupId();
     const amountValue = this.amount();
     const dateValue = this.date();
-    if (!groupId || amountValue === null || amountValue <= 0 || !dateValue) return;
+    if (
+      !groupId ||
+      amountValue === null ||
+      Number.isNaN(amountValue) ||
+      amountValue <= 0 ||
+      !dateValue
+    )
+      return;
 
     this.isSubmitting.set(true);
     this.errorMessage.set(null);

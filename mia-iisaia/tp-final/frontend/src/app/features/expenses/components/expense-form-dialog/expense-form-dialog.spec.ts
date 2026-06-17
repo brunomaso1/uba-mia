@@ -113,4 +113,13 @@ describe('ExpenseFormDialogComponent', () => {
     expect(instance.errorMessage()).toContain('No se pudo registrar el gasto');
     expect(dialogRef.close).not.toHaveBeenCalled();
   });
+
+  it('does not submit when amount is NaN', () => {
+    const { fixture, expensesService } = setup(null);
+    const instance = fixture.componentInstance as any;
+    instance.selectedGroupId.set('g-1');
+    instance.amount.set(NaN);
+    instance.onSubmit();
+    expect(expensesService.createExpense).not.toHaveBeenCalled();
+  });
 });
