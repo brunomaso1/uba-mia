@@ -77,6 +77,30 @@ Allows authenticated users to manage expense groups and their members.
 | POST | `/api/v1/groups/:id/members` | Add a user to the group |
 | GET | `/api/v1/groups/:id/members` | List all members of the group |
 
+### Expense Management (`/groups/:id/expenses`)
+
+Allows authenticated users to record and view shared expenses within a group. An expense always belongs to a group.
+
+**Entry points:**
+- Floating (+) button on the Portal page — opens the create-expense dialog with the first group preselected
+- "Ver gastos" action on each `GroupCardComponent` — navigates to that group's expense list
+- Floating (+) button on the expense list itself — opens the same dialog with the current group preselected
+
+**Pages:**
+- `GroupExpensesPage` — lists a group's expenses (description, amount, date), ordered by date descending
+
+**Components:**
+- `ExpenseFormDialogComponent` — `MatDialog` form: descripción, monto, fecha (default: today), grupo (`mat-select`, defaults to the preselected group or the first group)
+
+**Service:** `ExpensesService` — list and create methods, scoped per group
+
+**API endpoints used:**
+
+| Method | Path | Description |
+|--------|------|------------|
+| GET | `/api/v1/groups/:id/expenses` | List expenses for a group, ordered by date descending |
+| POST | `/api/v1/groups/:id/expenses` | Create an expense in a group (`paid_by` = current user; category assigned automatically) |
+
 ---
 
 ## Architecture
