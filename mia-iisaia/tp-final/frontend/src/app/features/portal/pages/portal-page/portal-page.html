@@ -9,4 +9,14 @@
       <a mat-flat-button color="primary" routerLink="/groups"> Ir a grupos </a>
     </mat-card-actions>
   </mat-card>
+
+  <button
+    mat-fab
+    color="primary"
+    class="add-expense-fab"
+    (click)="openAddExpenseDialog()"
+    aria-label="Agregar gasto"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
 </main>
