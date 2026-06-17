@@ -1,0 +1,55 @@
+<!-- frontend/src/app/features/expenses/components/expense-form-dialog/expense-form-dialog.html -->
+<h2 mat-dialog-title>Nuevo gasto</h2>
+
+<mat-dialog-content class="form-content">
+  <mat-form-field appearance="outline">
+    <mat-label>Descripción</mat-label>
+    <input matInput [value]="description()" (input)="description.set($any($event.target).value)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Monto</mat-label>
+    <input
+      matInput
+      type="number"
+      step="0.01"
+      min="0.01"
+      [value]="amount()"
+      (input)="amount.set($any($event.target).valueAsNumber)"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Fecha</mat-label>
+    <input matInput type="date" [value]="date()" (input)="date.set($any($event.target).value)" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Grupo</mat-label>
+    <mat-select
+      [value]="selectedGroupId()"
+      (selectionChange)="selectedGroupId.set($event.value)"
+      aria-label="Grupo del gasto"
+    >
+      @for (group of groups(); track group.id) {
+        <mat-option [value]="group.id">{{ group.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (errorMessage()) {
+    <p role="alert">{{ errorMessage() }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="isSubmitting() || !selectedGroupId() || !amount()"
+  >
+    Guardar
+  </button>
+</mat-dialog-actions>
